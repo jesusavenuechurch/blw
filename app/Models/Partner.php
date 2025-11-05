@@ -110,94 +110,47 @@ class Partner extends Model
             Log::info("Tokens generated for new partner: {$partner->email}");
         });
 
-        // Generate QR code with color ON CREATION
-        static::created(function ($partner) {
-            if (!$partner->id) {
-                Log::error('Partner created without ID');
-                return;
-            }
-
-            $partner->generateColoredQrCode();
-        });
-
         // Regenerate QR code when tier changes
         static::updated(function ($partner) {
             if ($partner->isDirty('tier')) {
                 Log::info("Tier changed for Partner ID: {$partner->id}, regenerating QR code");
-                $partner->generateColoredQrCode();
+                $partner->generateQrCode();
             }
         });
     }
 
     /**
-     * Generate QR code with tier-specific color (using the reliable file method)
+     * Generate QR code with tier-specific color
      */
-    public function generateColoredQrCode(): bool
+    public function generateQrCode(): ?string
     {
         try {
-            // Ensure the partner has an ID
-            if (!$this->id) {
-                Log::error('Cannot generate QR code: Partner ID is missing');
-                return false;
-            }
-
-            // Create directory if it doesn't exist
-            $directory = storage_path('app/public/qr_codes');
-            if (!is_dir($directory)) {
-                mkdir($directory, 0755, true);
-            }
-
-            $filename = 'qr_codes/partner_' . $this->id . '.png';
-            $path = storage_path('app/public/' . $filename);
-
-            // Generate verification URL
             $verificationUrl = route('partner.verify', ['id' => $this->id]);
-            
             if (!$verificationUrl) {
                 Log::warning("Route partner.verify not found for Partner ID: {$this->id}");
-                return false;
+                return null;
             }
 
-            // Get tier color
             $color = $this->tier_color;
-            
-            Log::info("Generating QR code for Partner ID: {$this->id} with tier: {$this->tier}", [
-                'color' => $color,
-                'url' => $verificationUrl
-            ]);
+            $filename = 'qr_codes/partner_' . $this->id . '.png';
 
-            // Generate QR code with color using the file path method
-            QrCode::format('png')
+            $qrContent = QrCode::format('png')
                 ->size(300)
                 ->color($color['r'], $color['g'], $color['b'])
-                ->generate($verificationUrl, $path);
+                ->generate($verificationUrl);
 
-            // Verify the file was created and has content
-            if (!file_exists($path)) {
-                Log::error("QR code file was not created at path: {$path}");
-                return false;
-            }
+            Storage::disk('public')->put($filename, $qrContent);
 
-            $fileSize = filesize($path);
-            if ($fileSize === 0 || $fileSize === false) {
-                Log::error("QR code file is empty at path: {$path}");
-                return false;
-            }
+            $this->qr_code_path = $filename;
+            $this->save();
 
-            // Update without triggering events
-            $this->updateQuietly(['qr_code_path' => $filename]);
-
-            Log::info("QR code successfully generated for Partner ID: {$this->id} with tier {$this->tier}, file size: {$fileSize} bytes");
-            return true;
-
+            return $filename;
         } catch (\Exception $e) {
             Log::error('Failed to generate QR code for partner ' . $this->id, [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'tier' => $this->tier,
-                'color' => $color ?? 'not set'
+                'trace' => $e->getTraceAsString()
             ]);
-            return false;
+            return null;
         }
     }
 
@@ -235,7 +188,10 @@ class Partner extends Model
         
         Log::info("Partner ID {$this->id} marked as registered");
 
-        // Send confirmation email only - QR code is already generated during creation
+        // Generate QR code AFTER registration is complete
+        $this->generateQrCode();
+        Log::info("QR code generated for registered Partner ID: {$this->id}");
+
         try {
             Mail::to($this->email)->send(new PartnerConfirmationMail($this));
             Log::info("Confirmation email sent to Partner ID: {$this->id}");
@@ -253,14 +209,5 @@ class Partner extends Model
         return $this->qr_code_path 
             ? Storage::url($this->qr_code_path) 
             : null;
-    }
-
-    /**
-     * Force regenerate QR code (for manual fixes)
-     */
-    public function forceRegenerateQrCode(): bool
-    {
-        Log::info("Force regenerating QR code for Partner ID: {$this->id}");
-        return $this->generateColoredQrCode();
     }
 }
