@@ -15,6 +15,23 @@
         <p class="text-gray-600 text-lg mb-8">
             Thank you for completing your registration, <strong>{{ $partner->full_name }}</strong>!
         </p>
+
+        {{-- ✅ QR Code Section --}}
+        @if (!empty($partner->qr_code_path))
+            <div class="mb-10">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your QR Code</h2>
+                <div class="flex justify-center">
+                    <img 
+                        src="{{ asset('storage/' . $partner->qr_code_path) }}" 
+                        alt="Your QR Code" 
+                        class="w-48 h-48 object-contain border-4 border-green-100 rounded-xl shadow-md"
+                    >
+                </div>
+                <p class="text-gray-500 text-sm mt-3">
+                    Please save this QR code — you’ll need it for event check-in.
+                </p>
+            </div>
+        @endif
         
         <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 mb-8">
             <h2 class="font-bold text-gray-800 mb-4">What's Next?</h2>
