@@ -30,6 +30,12 @@ class UserResource extends Resource
                     ->email()
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('password')
+                    ->password() // hides input
+                    ->required(fn ($livewire) => $livewire instanceof Pages\CreateUser) // required only on create
+                    ->maxLength(255)
+                    ->dehydrateStateUsing(fn ($state) => $state ? bcrypt($state) : null) // hash before saving
+                    ->dehydrated(fn ($state) => filled($state)), // don't update if empty
             ]);
     }
 
