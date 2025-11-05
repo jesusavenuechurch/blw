@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title')->nullable(); // Bro/Sis/Dcn/Pastor
             $table->string('designation')->nullable(); // Bro/Sis/Dcn/Pastor
             $table->string('full_name');
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('region')->nullable();
             $table->string('zone')->nullable();

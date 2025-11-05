@@ -21,16 +21,19 @@ class PartnerConfirmationMail extends Mailable
 
     public function build()
     {
+        // Generate subject dynamically based on partner's tier
+        $subject = 'Confirmation of Registration – ' . ucfirst($this->partner->tier_display) . ' Lounge';
+
         $mail = $this->markdown('emails.partner.confirmation')
-            ->subject('IPPC 2025 Registration Confirmed - Your QR Code Inside')
+            ->subject($subject)
             ->with([
                 'partner' => $this->partner,
             ]);
 
-        // Attach QR code (should exist now after registration)
+        // Attach the partner's QR code if it exists
         if ($this->partner->qr_code_path && Storage::disk('public')->exists($this->partner->qr_code_path)) {
             $mail->attach(storage_path('app/public/' . $this->partner->qr_code_path), [
-                'as' => 'IPPC_2025_QR_Code_' . $this->partner->full_name . '.png',
+                'as' => 'Angel_Lounge_QR_' . str_replace(' ', '_', $this->partner->full_name) . '.png',
                 'mime' => 'image/png',
             ]);
         }
