@@ -35,17 +35,32 @@ class PartnerResource extends Resource
                     ->description('Basic information about the partner')
                     ->schema([
                         Select::make('title')
+                        ->options([
+                            'Brother',
+                            'Sister',
+                            'Deacon',
+                            'Deaconess',
+                            'Pastor',
+                        ])
+                        ->label('Title')
+                        ->required(),
+                        Select::make('designation')
                             ->options([
                                 'Non-Pastoring' => 'Non-Pastoring',
+                                'BLW Group Secretary' => 'BLW Group Secretary',
+                                'BLW Zonal Secretary' => 'BLW Zonal Secretary',
+                                'BLW Regional Secretary' => 'BLW Regional Secretary',
+                                'Deacon' => 'Deacon',
+                                'Deaconess' => 'Deaconess',
                                 'Church Pastor' => 'Church Pastor',
-                                'Sub-Group Pastor' => 'Dcn',
                                 'Group Pastor' => 'Group Pastor',
+                                'Sub-Group Pastor' => 'Sub-Group Pastor',
                                 'Asst. Zonal Pastor' => 'Asst. Zonal Pastor',
                                 'Zonal Pastor' => 'Zonal Pastor',
                                 'Zonal Director' => 'Zonal Director',
                                 'Regional Pastor' => 'Regional Pastor',
                             ])
-                            ->label('Title')
+                            ->label('Designation')
                             ->required(),
 
                         TextInput::make('full_name')
@@ -97,6 +112,8 @@ class PartnerResource extends Resource
                                 'silver' => '🥈 Silver',
                                 'gold' => '🥇 Gold',
                                 'diamond' => '💠 Diamond',
+                                'as_one_man' => '💞 As One Man',
+                                'top_individual' => '⭐ Top Individual Partner',
                             ])
                             ->label('Partnership Tier')
                             ->required()
@@ -128,7 +145,7 @@ class PartnerResource extends Resource
                             }),
 
                         Toggle::make('will_be_at_exhibition')
-                            ->label('Will you be at the ROR exhibition at Angel Court?')
+                            ->label('Will you be our honoured Guest at the Angel Lounge?')
                             ->visible(fn ($get) => $get('will_attend_ippc') === true)
                             ->default(false),
 
@@ -152,17 +169,22 @@ class PartnerResource extends Resource
                                 if (!$state) {
                                     $set('spouse_title', null);
                                     $set('spouse_name', null);
-                                    $set('spouse_surname', null);
                                     $set('spouse_kc_handle', null);
                                 }
                             }),
 
                         Select::make('spouse_title')
                             ->options([
-                                'Bro' => 'Bro',
-                                'Sis' => 'Sis',
-                                'Dcn' => 'Dcn',
-                                'Pastor' => 'Pastor',
+                                'Non-Pastoring' => 'Non-Pastoring',
+                                'Deacon' => 'Deacon',
+                                'Deaconess' => 'Deaconess',
+                                'Church Pastor' => 'Church Pastor',
+                                'Group Pastor' => 'Group Pastor',
+                                'Sub-Group Pastor' => 'Sub-Group Pastor',
+                                'Asst. Zonal Pastor' => 'Asst. Zonal Pastor',
+                                'Zonal Pastor' => 'Zonal Pastor',
+                                'Zonal Director' => 'Zonal Director',
+                                'Regional Pastor' => 'Regional Pastor',
                             ])
                             ->label('Spouse Title')
                             ->visible(fn ($get) => $get('coming_with_spouse') === true)
@@ -174,17 +196,10 @@ class PartnerResource extends Resource
                             ->required(fn ($get) => $get('coming_with_spouse') === true)
                             ->maxLength(255),
 
-                        TextInput::make('spouse_surname')
-                            ->label('Spouse Surname')
-                            ->visible(fn ($get) => $get('coming_with_spouse') === true)
-                            ->required(fn ($get) => $get('coming_with_spouse') === true)
-                            ->maxLength(255),
-
                         TextInput::make('spouse_kc_handle')
                             ->label('Spouse KC Handle')
                             ->visible(fn ($get) => $get('coming_with_spouse') === true)
                             ->maxLength(255)
-                            ->helperText('Optional: Spouse\'s KingsChat handle'),
                     ])
                     ->columns(2),
 
@@ -258,11 +273,11 @@ class PartnerResource extends Resource
             ->poll('5s')
             ->columns([
                 Tables\Columns\TextColumn::make('full_name')
-                    ->label('Names')
+                    ->label('Full Name')
                     ->searchable()
                     ->sortable()
                     ->description(fn ($record) => $record->coming_with_spouse 
-                        ? "👥 With: {$record->spouse_title} {$record->spouse_name} {$record->spouse_surname}" 
+                        ? "👥 With: {$record->spouse_title} {$record->spouse_name}" 
                         : null),
 
                 Tables\Columns\TextColumn::make('email')
@@ -306,6 +321,8 @@ class PartnerResource extends Resource
                         'silver' => '🥈 Silver',
                         'gold' => '🥇 Gold',
                         'diamond' => '💠 Diamond',
+                        'as_one_man' => '🎵 As One Man',
+                        'top_individual' => '⭐ Top Individual Partner',
                         default => 'No Tier',
                     })
                     ->colors([
@@ -313,6 +330,8 @@ class PartnerResource extends Resource
                         'secondary' => 'silver',
                         'warning' => 'gold',
                         'info' => 'diamond',
+                        'success' => 'as_one_man',
+                        'primary' => 'top_individual',
                     ])
                     ->sortable(),
 
@@ -392,7 +411,9 @@ class PartnerResource extends Resource
                         'ruby' => '💎 Ruby',
                         'silver' => '🥈 Silver',
                         'gold' => '🥇 Gold',
-                        'diamond' => '💠 Diamond',
+                        'diamond' => '💠 Diamond', 
+                        'as_one_man' => '🤝 As One Man',
+                        'top_individual' => '⭐ Top Individual Partner',
                     ]),
 
                 Tables\Filters\SelectFilter::make('email_status')
@@ -589,6 +610,8 @@ class PartnerResource extends Resource
                                 'silver' => Partner::where('tier', 'silver')->count(),
                                 'gold' => Partner::where('tier', 'gold')->count(),
                                 'diamond' => Partner::where('tier', 'diamond')->count(),
+                                'as_one_man' => Partner::where('tier', 'as_one_man')->count(),
+                                'top_individual' => Partner::where('tier', 'top_individual')->count(),
                             ],
                         ];
 

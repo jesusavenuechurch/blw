@@ -1,10 +1,5 @@
 <?php
 
-// ============================================
-// 1. UPDATED Partner Model
-// app/Models/Partner.php
-// ============================================
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,6 +17,7 @@ class Partner extends Model
 
     protected $fillable = [
         'title',
+        'designation',
         'full_name',
         'email',
         'phone',
@@ -45,8 +41,7 @@ class Partner extends Model
         'is_registered',
         'coming_with_spouse',
         'spouse_title',
-        'spouse_name',
-        'spouse_surname',
+        'spouse_name',  
         'spouse_kc_handle',
     ];
 
@@ -63,11 +58,13 @@ class Partner extends Model
     public function getTierColorAttribute(): array
     {
         return match($this->tier) {
-            'ruby' => ['r' => 224, 'g' => 17, 'b' => 95],      // Ruby Red: #E0115F
-            'silver' => ['r' => 192, 'g' => 192, 'b' => 192],  // Silver: #C0C0C0
-            'gold' => ['r' => 255, 'g' => 215, 'b' => 0],      // Gold: #FFD700
-            'diamond' => ['r' => 185, 'g' => 242, 'b' => 255], // Diamond Blue: #B9F2FF
-            default => ['r' => 0, 'g' => 0, 'b' => 0],         // Black (fallback)
+            'ruby' => ['r' => 155, 'g' => 17, 'b' => 30],          // Deep Ruby Red: #9B111E
+            'silver' => ['r' => 192, 'g' => 192, 'b' => 192],      // Classic Silver: #C0C0C0
+            'gold' => ['r' => 255, 'g' => 215, 'b' => 0],          // Bright Gold: #FFD700
+            'diamond' => ['r' => 128, 'g' => 0, 'b' => 128],       // Purple: #800080
+            'as_one_man' => ['r' => 200, 'g' => 162, 'b' => 200], // Lilac/Lavender: #C8A2C8
+            'top_individual' => ['r' => 64, 'g' => 224, 'b' => 208],      // Turquoise: #40E0D0
+            default => ['r' => 0, 'g' => 0, 'b' => 0],             // Black (fallback)
         };
     }
 
@@ -81,6 +78,8 @@ class Partner extends Model
             'silver' => '🥈 Silver',
             'gold' => '🥇 Gold',
             'diamond' => '💠 Diamond',
+            'as_one_man' => '🎵 As One Man',
+            'top_individual' => '⭐ Top Individual Partner',
             default => 'No Tier',
         };
     }
@@ -110,18 +109,6 @@ class Partner extends Model
             
             Log::info("Tokens generated for new partner: {$partner->email}");
         });
-
-        // static::created(function ($partner) {
-        //     if (!$partner->id) {
-        //         Log::error('Partner created without ID');
-        //         return;
-        //     }
-
-        //     // Generate QR code after partner is created
-        //     $partner->generateQrCode();
-            
-        //     Log::info("Partner created with ID: {$partner->id}, QR code generated");
-        // });
 
         // Regenerate QR code when tier changes
         static::updated(function ($partner) {
@@ -206,11 +193,11 @@ class Partner extends Model
         
         Log::info("Partner ID {$this->id} marked as registered");
 
-           // Generate QR code AFTER registration is complete
+        // Generate QR code AFTER registration is complete
         $this->generateQrCode();
         Log::info("QR code generated for registered Partner ID: {$this->id}");
 
-          try {
+        try {
             Mail::to($this->email)->send(new PartnerConfirmationMail($this));
             Log::info("Confirmation email sent to Partner ID: {$this->id}");
         } catch (\Exception $e) {
