@@ -24,6 +24,7 @@ Confirm My Details
 
 **Need Help?**  
 If you have any questions, please contact us at 
+
 [support@angel-lounge.com](mailto:support@angel-lounge.com)
 
 *This registration link is unique to you and will expire once used. Please do not share it with others.*
