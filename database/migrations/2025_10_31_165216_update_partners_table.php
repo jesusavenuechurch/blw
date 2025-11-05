@@ -9,11 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('partners', function (Blueprint $table) {
-            $table->boolean('email_pending')->default(false);
-            $table->boolean('email_sent')->default(false);
-            $table->boolean('email_failed')->default(false);
-            $table->string('verification_token')->nullable();
-            $table->text('email_response')->nullable(); // future inbound emails
+            // $table->boolean('email_pending')->default(false);
+            // $table->boolean('email_sent')->default(false);
+            // $table->boolean('email_failed')->default(false);
+            // $table->string('verification_token')->nullable();
+            // $table->text('email_response')->nullable(); // future inbound emails
         });
     }
 

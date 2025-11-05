@@ -180,12 +180,7 @@ class Partner extends Model
      * Mark the partner as registered/verified
      */
     public function markTokenAsUsed(): void
-    {
-        $this->update([
-            'token_used_at' => now(),
-            'is_registered' => true,
-        ]);
-        
+    {   
         Log::info("Partner ID {$this->id} marked as registered");
 
         // Generate QR code AFTER registration is complete
@@ -199,6 +194,10 @@ class Partner extends Model
             Log::error("Failed to send confirmation email to Partner ID {$this->id}: " . $e->getMessage());
             // Don't throw - registration should still succeed even if email fails
         }
+        $this->update([
+            'token_used_at' => now(),
+            'is_registered' => true,
+        ]);
     }
 
     /**

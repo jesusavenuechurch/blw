@@ -343,7 +343,7 @@
                                     <input type="text" name="spouse_kc_handle" value="{{ old('spouse_kc_handle', $partner->spouse_kc_handle) }}" placeholder="username"
                                            class="w-full border-2 border-gray-300 rounded-xl pl-10 pr-4 py-3.5 input-focus focus:border-pink-500">
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1">Optional: Spouse's KingsChat handle</p>
+                                <p class="text-xs text-gray-500 mt-1">Spouse's KingsChat handle</p>
                             </div>
                         </div>
                     </div>

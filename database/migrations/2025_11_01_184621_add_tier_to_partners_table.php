@@ -12,9 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('partners', function (Blueprint $table) {
-            $table->enum('tier', ['ruby', 'silver', 'gold', 'diamond'])
-                  ->default('ruby')
-                  ->after('church');
+            // $table->string('tier', 100)->default('ruby')->change()
+            //       ->after('church');
         });
     }
 

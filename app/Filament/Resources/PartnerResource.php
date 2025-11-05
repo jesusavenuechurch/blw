@@ -36,11 +36,11 @@ class PartnerResource extends Resource
                     ->schema([
                         Select::make('title')
                         ->options([
-                            'Brother',
-                            'Sister',
-                            'Deacon',
-                            'Deaconess',
-                            'Pastor',
+                           'Brother' => 'Brother',
+                            'Sister' => 'Sister',
+                            'Deacon' => 'Deacon',
+                            'Deaconess' => 'Deaconess',
+                            'Pastor' => 'Pastor',
                         ])
                         ->label('Title')
                         ->required(),
@@ -198,11 +198,11 @@ Toggle::make('will_be_at_exhibition')
 
                         Select::make('spouse_title')
                             ->options([
-                                'Brother',
-                                'Sister',
-                                'Deacon',
-                                'Deaconess',
-                                'Pastor',
+                                'Brother' => 'Brother',
+                                'Sister' => 'Sister',
+                                'Deacon' => 'Deacon',
+                                'Deaconess' => 'Deaconess',
+                                'Pastor' => 'Pastor',
                             ])
                             ->label('Spouse Title')
                             ->visible(fn ($get) => $get('coming_with_spouse') === true)
