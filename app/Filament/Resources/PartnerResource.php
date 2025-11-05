@@ -50,11 +50,9 @@ class PartnerResource extends Resource
                                 'BLW Group Secretary' => 'BLW Group Secretary',
                                 'BLW Zonal Secretary' => 'BLW Zonal Secretary',
                                 'BLW Regional Secretary' => 'BLW Regional Secretary',
-                                'Deacon' => 'Deacon',
-                                'Deaconess' => 'Deaconess',
                                 'Church Pastor' => 'Church Pastor',
-                                'Group Pastor' => 'Group Pastor',
                                 'Sub-Group Pastor' => 'Sub-Group Pastor',
+                                'Group Pastor' => 'Group Pastor',
                                 'Asst. Zonal Pastor' => 'Asst. Zonal Pastor',
                                 'Zonal Pastor' => 'Zonal Pastor',
                                 'Zonal Director' => 'Zonal Director',
@@ -131,30 +129,55 @@ class PartnerResource extends Resource
                 Section::make('IPPC 2025 Attendance')
                     ->description('Information about IPPC attendance and delivery preferences')
                     ->schema([
-                        Toggle::make('will_attend_ippc')
-                            ->label('Will you attend IPPC 2025?')
-                            ->default(false)
-                            ->live()
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                if (!$state) {
-                                    $set('will_be_at_exhibition', false);
-                                }
-                                if ($state) {
-                                    $set('delivery_method', null);
-                                }
-                            }),
+Toggle::make('will_attend_ippc')
+    ->label('Will you attend IPPC 2025?')
+    ->default(false)
+    ->live()
+    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+        if (!$state) {
+            // Not attending IPPC = can't attend exhibition
+            $set('will_be_at_exhibition', false);
+        }
+        
+        // Clear delivery method if attending both IPPC and exhibition
+        if ($state && $get('will_be_at_exhibition')) {
+            $set('delivery_method', null);
+        }
+    }),
 
-                        Toggle::make('will_be_at_exhibition')
-                            ->label('Will you be our honoured Guest at the Angel Lounge?')
-                            ->visible(fn ($get) => $get('will_attend_ippc') === true)
-                            ->default(false),
+Toggle::make('will_be_at_exhibition')
+    ->label('Will you be our honoured Guest at the Angel Lounge?')
+    ->visible(fn ($get) => $get('will_attend_ippc') === true)
+    ->default(false)
+    ->live()
+    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+        // If attending both IPPC and exhibition, clear delivery method
+        if ($state && $get('will_attend_ippc')) {
+            $set('delivery_method', null);
+        }
+    }),
 
-                        Textarea::make('delivery_method')
-                            ->label('How should we deliver your ROR gifts?')
-                            ->visible(fn ($get) => $get('will_attend_ippc') === false)
-                            ->helperText('Please provide details on how you\'d like to receive your ROR materials')
-                            ->rows(3)
-                            ->maxLength(1000),
+    Textarea::make('delivery_method')
+        ->label('How should we deliver your ROR gifts?')
+        ->placeholder('Please provide the name and contact information for the liaison person.')
+        ->visible(function ($get) {
+            $attendingIppc = $get('will_attend_ippc');
+            $attendingExhibition = $get('will_be_at_exhibition');
+            
+            // Show delivery method if:
+            // 1. Not attending IPPC at all, OR
+            // 2. Attending IPPC but NOT attending exhibition
+            return !$attendingIppc || ($attendingIppc && !$attendingExhibition);
+        })
+        ->required(function ($get) {
+            $attendingIppc = $get('will_attend_ippc');
+            $attendingExhibition = $get('will_be_at_exhibition');
+            
+            // Required if not attending both events
+            return !$attendingIppc || ($attendingIppc && !$attendingExhibition);
+        })
+        ->rows(3)
+        ->maxLength(1000),
                     ])
                     ->columns(1),
 
@@ -175,16 +198,11 @@ class PartnerResource extends Resource
 
                         Select::make('spouse_title')
                             ->options([
-                                'Non-Pastoring' => 'Non-Pastoring',
-                                'Deacon' => 'Deacon',
-                                'Deaconess' => 'Deaconess',
-                                'Church Pastor' => 'Church Pastor',
-                                'Group Pastor' => 'Group Pastor',
-                                'Sub-Group Pastor' => 'Sub-Group Pastor',
-                                'Asst. Zonal Pastor' => 'Asst. Zonal Pastor',
-                                'Zonal Pastor' => 'Zonal Pastor',
-                                'Zonal Director' => 'Zonal Director',
-                                'Regional Pastor' => 'Regional Pastor',
+                                'Brother',
+                                'Sister',
+                                'Deacon',
+                                'Deaconess',
+                                'Pastor',
                             ])
                             ->label('Spouse Title')
                             ->visible(fn ($get) => $get('coming_with_spouse') === true)
