@@ -235,11 +235,7 @@ class Partner extends Model
         
         Log::info("Partner ID {$this->id} marked as registered");
 
-        // Regenerate QR code with color AFTER registration is complete
-        // This ensures the QR code has the correct tier color
-        $this->generateColoredQrCode();
-        Log::info("QR code regenerated for registered Partner ID: {$this->id}");
-
+        // Send confirmation email only - QR code is already generated during creation
         try {
             Mail::to($this->email)->send(new PartnerConfirmationMail($this));
             Log::info("Confirmation email sent to Partner ID: {$this->id}");
