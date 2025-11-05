@@ -8,7 +8,7 @@ Thank you for your unwavering partnership with Rhapsody of Realities in our year
 
 
 @component('mail::button', ['url' => $registrationUrl, 'color' => 'success'])
-Complete Registration
+Confirm My Details
 @endcomponent
 
 
