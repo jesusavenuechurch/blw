@@ -122,40 +122,35 @@ class Partner extends Model
     /**
      * Generate QR code with tier-specific color
      */
-    public function generateQrCode(): void
+    public function generateQrCode(): ?string
     {
         try {
-            $directory = storage_path('app/public/qr_codes');
-            if (!is_dir($directory)) {
-                mkdir($directory, 0755, true);
-            }
-
-            $filename = 'qr_codes/partner_' . $this->id . '.png';
-            $path = storage_path('app/public/' . $filename);
-
-            // Delete old QR code if exists
-            if (file_exists($path)) {
-                unlink($path);
-            }
-
             $verificationUrl = route('partner.verify', ['id' => $this->id]);
-            
-            // Get tier color
-            $color = $this->tier_color;
+            if (!$verificationUrl) {
+                Log::warning("Route partner.verify not found for Partner ID: {$this->id}");
+                return null;
+            }
 
-            // Generate QR code with tier-specific color
-            QrCode::format('png')
+            $color = $this->tier_color;
+            $filename = 'qr_codes/partner_' . $this->id . '.png';
+
+            $qrContent = QrCode::format('png')
                 ->size(300)
                 ->color($color['r'], $color['g'], $color['b'])
-                ->generate($verificationUrl, $path);
+                ->generate($verificationUrl);
 
-            $this->updateQuietly(['qr_code_path' => $filename]);
-            
+            Storage::disk('public')->put($filename, $qrContent);
+
+            $this->qr_code_path = $filename;
+            $this->save();
+
+            return $filename;
         } catch (\Exception $e) {
             Log::error('Failed to generate QR code for partner ' . $this->id, [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+            return null;
         }
     }
 

@@ -1,5 +1,7 @@
 @component('mail::message')
 
+<img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo" width="120" style="display:block;margin:0 auto 20px;">
+
 # Dear Esteemed **{{ $partner->title }} {{ $partner->full_name }}** - {{$partner->tier}} Partner
 
 Warm greetings in the precious name of our Lord Jesus Christ!
