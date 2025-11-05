@@ -110,20 +110,38 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Designation <span class="text-red-500">*</span>
+                                Title <span class="text-red-500">*</span>
                             </label>
                             <select name="title" required class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-purple-500 @error('title') border-red-500 @enderror">
-                                <option value="">Select Designation</option>
-                                <option value="Non-Pastoring" {{ old('title', $partner->title) == 'Non-Pastoring' ? 'selected' : '' }}>Non-Pastoring</option>
-                                <option value="Church Pastor" {{ old('title', $partner->title) == 'Church Pastor' ? 'selected' : '' }}>Church Pastor</option>
-                                <option value="Sub-Group Pastor" {{ old('title', $partner->title) == 'Sub-Group Pastor' ? 'selected' : '' }}>Sub-Group Pastor</option>
-                                <option value="Group Pastor" {{ old('title', $partner->title) == 'Group Pastor' ? 'selected' : '' }}>Group Pastor</option>
-                                <option value="Asst. Zonal Pastor" {{ old('title', $partner->title) == 'Asst. Zonal Pastor' ? 'selected' : '' }}>Asst. Zonal Pastor</option>
-                                <option value="Zonal Pastor" {{ old('title', $partner->title) == 'Zonal Pastor' ? 'selected' : '' }}>Zonal Pastor</option>
-                                <option value="Zonal Director" {{ old('title', $partner->title) == 'Zonal Director' ? 'selected' : '' }}>Zonal Director</option>
-                                <option value="Regional Pastor" {{ old('title', $partner->title) == 'Regional Pastor' ? 'selected' : '' }}>Regional Pastor</option>
+                                <option value="">Select Title</option>
+                                <option value="Brother" {{ old('title', $partner->title) == 'Brother' ? 'selected' : '' }}>Brother</option>
+                                <option value="Sister" {{ old('title', $partner->title) == 'Sister' ? 'selected' : '' }}>Sister</option>
+                                <option value="Deacon" {{ old('title', $partner->title) == 'Deacon' ? 'selected' : '' }}>Deacon</option>
+                                <option value="Deaconess" {{ old('title', $partner->title) == 'Deaconess' ? 'selected' : '' }}>Deaconess</option>
+                                <option value="Pastor" {{ old('title', $partner->title) == 'Pastor' ? 'selected' : '' }}>Pastor</option>
                             </select>
                             @error('title')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Designation <span class="text-red-500">*</span>
+                            </label>
+                            <select name="designation" required class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-purple-500 @error('designation') border-red-500 @enderror">
+                                <option value="">Select Designation</option>
+                                <option value="Non-Pastoring" {{ old('designation', $partner->designation) == 'Non-Pastoring' ? 'selected' : '' }}>Non-Pastoring</option>
+                                <option value="BLW Group Secretary" {{ old('designation', $partner->designation) == 'BLW Group Secretary' ? 'selected' : '' }}>BLW Group Secretary</option>
+                                <option value="BLW Zonal Secretary" {{ old('designation', $partner->designation) == 'BLW Zonal Secretary' ? 'selected' : '' }}>BLW Zonal Secretary</option>
+                                <option value="BLW Regional Secretary" {{ old('designation', $partner->designation) == 'BLW Regional Secretary' ? 'selected' : '' }}>BLW Regional Secretary</option>
+                                <option value="Church Pastor" {{ old('designation', $partner->designation) == 'Church Pastor' ? 'selected' : '' }}>Church Pastor</option>
+                                <option value="Sub-Group Pastor" {{ old('designation', $partner->designation) == 'Sub-Group Pastor' ? 'selected' : '' }}>Sub-Group Pastor</option>
+                                <option value="Group Pastor" {{ old('designation', $partner->designation) == 'Group Pastor' ? 'selected' : '' }}>Group Pastor</option>
+                                <option value="Asst. Zonal Pastor" {{ old('designation', $partner->designation) == 'Asst. Zonal Pastor' ? 'selected' : '' }}>Asst. Zonal Pastor</option>
+                                <option value="Zonal Pastor" {{ old('designation', $partner->designation) == 'Zonal Pastor' ? 'selected' : '' }}>Zonal Pastor</option>
+                                <option value="Zonal Director" {{ old('designation', $partner->designation) == 'Zonal Director' ? 'selected' : '' }}>Zonal Director</option>
+                                <option value="Regional Pastor" {{ old('designation', $partner->designation) == 'Regional Pastor' ? 'selected' : '' }}>Regional Pastor</option>
+                            </select>
+                            @error('designation')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
 
                         <div>
@@ -146,15 +164,16 @@
                             <input type="tel" name="phone" value="{{ old('phone', $partner->phone) }}" placeholder="+1234567890"
                                    class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-purple-500">
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">KC Handle</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">@</span>
-                            <input type="text" name="kc_handle" value="{{ old('kc_handle', $partner->kc_handle) }}" placeholder="username"
-                                class="w-full border-2 border-gray-300 rounded-xl pl-10 pr-4 py-3.5 input-focus focus:border-purple-500">
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">KC Handle</label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">@</span>
+                                <input type="text" name="kc_handle" value="{{ old('kc_handle', $partner->kc_handle) }}" placeholder="username"
+                                    class="w-full border-2 border-gray-300 rounded-xl pl-10 pr-4 py-3.5 input-focus focus:border-purple-500">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Your KingsChat handle</p>
                         </div>
-                        <p class="text-xs text-gray-500 mt-1">Your KingsChat handle (optional)</p>
                     </div>
                 </div>
 
@@ -208,12 +227,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">ROR Copies Sponsored</label>
-                            <input type="number" name="ror_copies_sponsored" value="{{ old('ror_copies_sponsored', $partner->ror_copies_sponsored ?? 0) }}" min="0"
-                                   class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-indigo-500">
-                        </div>
-
+                        
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 Partnership Tier <span class="ml-2 text-xs font-normal text-gray-500">(Assigned by admin)</span>
@@ -226,7 +240,11 @@
                                 @elseif($partner->tier === 'gold')
                                     <span class="text-yellow-600">🥇 Gold Partner</span>
                                 @elseif($partner->tier === 'diamond')
-                                    <span class="text-cyan-600">💠 Diamond Partner</span>
+                                    <span class="text-purple-600">💠 Diamond Partner</span>
+                                @elseif($partner->tier === 'as_one_man')
+                                    <span class="text-indigo-600">💞 As One Man Partner</span>
+                                @elseif($partner->tier === 'top_individual')
+                                    <span class="text-blue-600">⭐ Top Individual Partner</span>
                                 @else
                                     <span class="text-gray-600">Not Assigned</span>
                                 @endif
@@ -248,12 +266,13 @@
 
                         <div id="exhibition_field" class="hidden-field">
                             <label class="relative flex items-start p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl cursor-pointer hover:shadow-lg transition duration-300">
-                                <input type="checkbox" name="will_be_at_exhibition" value="1" 
+                                <input type="checkbox" name="will_be_at_exhibition" id="will_be_at_exhibition" value="1" 
                                        {{ old('will_be_at_exhibition', $partner->will_be_at_exhibition) ? 'checked' : '' }}
+                                       onchange="toggleIPPCFields()"
                                        class="w-5 h-5 text-blue-600 rounded mt-0.5">
                                 <div class="ml-4">
-                                    <span class="font-semibold text-gray-800 block">Will you be at the ROR exhibition at Angel Court?</span>
-                                    <span class="text-sm text-gray-600">Check if you plan to attend the exhibition</span>
+                                    <span class="font-semibold text-gray-800 block">Will you be our honoured Guest at the Angel Lounge?</span>
+                                    <span class="text-sm text-gray-600">Check if you plan to visit the Angel Lounge exhibition</span>
                                 </div>
                             </label>
                         </div>
@@ -262,9 +281,9 @@
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
                                 How should we deliver your ROR gifts? <span class="text-red-500">*</span>
                             </label>
-                            <textarea name="delivery_method" id="delivery_method" rows="3" placeholder="Please provide details on how you'd like to receive your ROR materials..."
+                            <textarea name="delivery_method" id="delivery_method" rows="3" placeholder="Please provide the name and contact information for the liaison person..."
                                       class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-indigo-500">{{ old('delivery_method', $partner->delivery_method) }}</textarea>
-                            <p class="text-sm text-gray-500 mt-1">Required if not attending IPPC</p>
+                            <p class="text-sm text-gray-500 mt-1">Required if not attending both IPPC and Angel Lounge</p>
                         </div>
                     </div>
                 </div>
@@ -301,38 +320,29 @@
                                 </label>
                                 <select name="spouse_title" id="spouse_title" class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-pink-500">
                                     <option value="">Select Title</option>
-                                    <option value="Bro" {{ old('spouse_title', $partner->spouse_title) == 'Bro' ? 'selected' : '' }}>Bro</option>
-                                    <option value="Sis" {{ old('spouse_title', $partner->spouse_title) == 'Sis' ? 'selected' : '' }}>Sis</option>
-                                    <option value="Dcn" {{ old('spouse_title', $partner->spouse_title) == 'Dcn' ? 'selected' : '' }}>Dcn</option>
+                                    <option value="Brother" {{ old('spouse_title', $partner->spouse_title) == 'Brother' ? 'selected' : '' }}>Brother</option>
+                                    <option value="Sister" {{ old('spouse_title', $partner->spouse_title) == 'Sister' ? 'selected' : '' }}>Sister</option>
+                                    <option value="Deacon" {{ old('spouse_title', $partner->spouse_title) == 'Deacon' ? 'selected' : '' }}>Deacon</option>
+                                    <option value="Deaconess" {{ old('spouse_title', $partner->spouse_title) == 'Deaconess' ? 'selected' : '' }}>Deaconess</option>
                                     <option value="Pastor" {{ old('spouse_title', $partner->spouse_title) == 'Pastor' ? 'selected' : '' }}>Pastor</option>
-                                    <option value="Mr" {{ old('spouse_title', $partner->spouse_title) == 'Mr' ? 'selected' : '' }}>Mr</option>
-                                    <option value="Mrs" {{ old('spouse_title', $partner->spouse_title) == 'Mrs' ? 'selected' : '' }}>Mrs</option>
-                                    <option value="Miss" {{ old('spouse_title', $partner->spouse_title) == 'Miss' ? 'selected' : '' }}>Miss</option>
-                                    <option value="Dr" {{ old('spouse_title', $partner->spouse_title) == 'Dr' ? 'selected' : '' }}>Dr</option>
-                                    <option value="Rev" {{ old('spouse_title', $partner->spouse_title) == 'Rev' ? 'selected' : '' }}>Rev</option>
                                 </select>
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Spouse First Name <span class="text-red-500">*</span>
+                                    Spouse Name <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" name="spouse_name" id="spouse_name" value="{{ old('spouse_name', $partner->spouse_name) }}" placeholder="First name"
-                                       class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-pink-500">
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                    Spouse Surname <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" name="spouse_surname" id="spouse_surname" value="{{ old('spouse_surname', $partner->spouse_surname) }}" placeholder="Surname"
+                                <input type="text" name="spouse_name" id="spouse_name" value="{{ old('spouse_name', $partner->spouse_name) }}" placeholder="Full name"
                                        class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-pink-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-gray-700 mb-2">Spouse KC Handle</label>
-                                <input type="text" name="spouse_kc_handle" value="{{ old('spouse_kc_handle', $partner->spouse_kc_handle) }}" placeholder="@username"
-                                       class="w-full border-2 border-gray-300 rounded-xl px-4 py-3.5 input-focus focus:border-pink-500">
+                                <div class="relative">
+                                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">@</span>
+                                    <input type="text" name="spouse_kc_handle" value="{{ old('spouse_kc_handle', $partner->spouse_kc_handle) }}" placeholder="username"
+                                           class="w-full border-2 border-gray-300 rounded-xl pl-10 pr-4 py-3.5 input-focus focus:border-pink-500">
+                                </div>
                                 <p class="text-xs text-gray-500 mt-1">Optional: Spouse's KingsChat handle</p>
                             </div>
                         </div>
@@ -362,14 +372,22 @@
 <script>
     function toggleIPPCFields() {
         const attendingIPPC = document.getElementById('will_attend_ippc').checked;
+        const attendingExhibition = document.getElementById('will_be_at_exhibition').checked;
         const exhibitionField = document.getElementById('exhibition_field');
         const deliveryField = document.getElementById('delivery_field');
         const deliveryTextarea = document.getElementById('delivery_method');
         
         if (attendingIPPC) {
             exhibitionField.classList.remove('hidden-field');
-            deliveryField.classList.add('hidden-field');
-            if (deliveryTextarea) deliveryTextarea.required = false;
+            
+            // Only hide delivery if attending BOTH IPPC and exhibition
+            if (attendingExhibition) {
+                deliveryField.classList.add('hidden-field');
+                if (deliveryTextarea) deliveryTextarea.required = false;
+            } else {
+                deliveryField.classList.remove('hidden-field');
+                if (deliveryTextarea) deliveryTextarea.required = true;
+            }
         } else {
             exhibitionField.classList.add('hidden-field');
             deliveryField.classList.remove('hidden-field');
@@ -382,18 +400,15 @@
         const spouseFields = document.getElementById('spouse_fields');
         const spouseTitle = document.getElementById('spouse_title');
         const spouseName = document.getElementById('spouse_name');
-        const spouseSurname = document.getElementById('spouse_surname');
         
         if (withSpouse) {
             spouseFields.classList.remove('hidden-field');
             if (spouseTitle) spouseTitle.required = true;
             if (spouseName) spouseName.required = true;
-            if (spouseSurname) spouseSurname.required = true;
         } else {
             spouseFields.classList.add('hidden-field');
             if (spouseTitle) spouseTitle.required = false;
             if (spouseName) spouseName.required = false;
-            if (spouseSurname) spouseSurname.required = false;
         }
     }
 
@@ -401,6 +416,12 @@
     document.addEventListener('DOMContentLoaded', function() {
         toggleIPPCFields();
         toggleSpouseFields();
+        
+        // Add event listener to exhibition checkbox
+        const exhibitionCheckbox = document.getElementById('will_be_at_exhibition');
+        if (exhibitionCheckbox) {
+            exhibitionCheckbox.addEventListener('change', toggleIPPCFields);
+        }
     });
 </script>
 @endsection

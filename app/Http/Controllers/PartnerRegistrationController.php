@@ -51,7 +51,8 @@ class PartnerRegistrationController extends Controller
 
         // Validate form data
         $validator = Validator::make($request->all(), [
-            'title' => 'required|in:Bro,Sis,Dcn,Pastor,Mr,Mrs,Miss,Dr,Rev',
+            'title' => 'required|in:Brother,Sister,Deacon,Deaconess,Pastor',
+            'designation' => 'required|in:Non-Pastoring,BLW Group Secretary,BLW Zonal Secretary,BLW Regional Secretary,Church Pastor,Sub-Group Pastor,Group Pastor,Asst. Zonal Pastor,Zonal Pastor,Zonal Director,Regional Pastor',
             'full_name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'kc_handle' => 'nullable|string|max:255',
@@ -64,9 +65,8 @@ class PartnerRegistrationController extends Controller
             'will_be_at_exhibition' => 'nullable|boolean',
             'delivery_method' => 'nullable|string|max:1000',
             'coming_with_spouse' => 'boolean',
-            'spouse_title' => 'nullable|required_if:coming_with_spouse,1|in:Bro,Sis,Dcn,Pastor,Mr,Mrs,Miss,Dr,Rev',
+            'spouse_title' => 'nullable|required_if:coming_with_spouse,1|in:Brother,Sister,Deacon,Deaconess,Pastor',
             'spouse_name' => 'nullable|required_if:coming_with_spouse,1|string|max:255',
-            'spouse_surname' => 'nullable|required_if:coming_with_spouse,1|string|max:255',
             'spouse_kc_handle' => 'nullable|string|max:255',
         ]);
 
@@ -78,6 +78,7 @@ class PartnerRegistrationController extends Controller
             // Prepare update data
             $updateData = [
                 'title' => $request->title,
+                'designation' => $request->designation,
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,
                 'kc_handle' => $request->kc_handle,
@@ -95,12 +96,10 @@ class PartnerRegistrationController extends Controller
             if ($request->boolean('coming_with_spouse')) {
                 $updateData['spouse_title'] = $request->spouse_title;
                 $updateData['spouse_name'] = $request->spouse_name;
-                $updateData['spouse_surname'] = $request->spouse_surname;
                 $updateData['spouse_kc_handle'] = $request->spouse_kc_handle;
             } else {
                 $updateData['spouse_title'] = null;
                 $updateData['spouse_name'] = null;
-                $updateData['spouse_surname'] = null;
                 $updateData['spouse_kc_handle'] = null;
             }
 
@@ -125,6 +124,15 @@ class PartnerRegistrationController extends Controller
 
     public function success(Partner $partner)
     {
+         // Get the last registered partner for this session
+        $partner = Partner::where('is_registered', true)
+                        ->latest('token_used_at')
+                        ->first();
+                        
+        if (!$partner) {
+            return redirect()->route('partner.register', ['token' => request('token')])
+                ->with('error', 'Session expired. Please try again.');
+        }
         return view('partner.registration-success', compact('partner'));
     }
         /**
