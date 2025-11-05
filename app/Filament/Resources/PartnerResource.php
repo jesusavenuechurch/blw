@@ -573,6 +573,48 @@ Toggle::make('will_be_at_exhibition')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    // ADD QR CODE BULK ACTION HERE
+                    Tables\Actions\BulkAction::make('generate_qr_codes')
+                        ->label('Generate QR Codes')
+                        ->icon('heroicon-o-qr-code')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading('Generate QR Codes')
+                        ->modalDescription('Generate QR codes for all selected partners? This will create tier-specific colored QR codes for verification.')
+                        ->action(function (Collection $records) {
+                            $successCount = 0;
+                            $failCount = 0;
+                            
+                            foreach ($records as $record) {
+                                try {
+                                    $result = $record->generateQrCode();
+                                    if ($result) {
+                                        $successCount++;
+                                    } else {
+                                        $failCount++;
+                                        \Log::error("Failed to generate QR code for partner {$record->id}");
+                                    }
+                                } catch (\Exception $e) {
+                                    $failCount++;
+                                    \Log::error("Exception generating QR code for partner {$record->id}: " . $e->getMessage());
+                                }
+                            }
+
+                            if ($successCount > 0) {
+                                Notification::make()
+                                    ->title('QR Codes Generated')
+                                    ->body("Successfully generated {$successCount} QR code(s). Failed: {$failCount}")
+                                    ->success()
+                                    ->send();
+                            } else {
+                                Notification::make()
+                                    ->title('QR Generation Failed')
+                                    ->body("Failed to generate QR codes for all {$failCount} selected partners. Check logs for details.")
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
+
                     Tables\Actions\BulkAction::make('resend_emails')
                         ->label('Resend Emails')
                         ->icon('heroicon-o-envelope')
