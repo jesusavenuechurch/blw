@@ -1,7 +1,5 @@
 @component('mail::message')
-# Welcome to IPPC 2025 Partner Program! 🎉
-
-Dear Esteemed **{{ $partner->title }} {{ $partner->full_name }}**,
+# Dear Esteemed **{{ $partner->title }} {{ $partner->full_name }}** - {{$partner->tier}} Partner 🎉
 
 Warm greetings in the precious name of our Lord Jesus Christ!
 
@@ -15,7 +13,7 @@ To finalize your registration and confirm your details, please click the button 
 Complete Registration
 @endcomponent
 
-## 📋 Your Partnership Details
+## Your Partnership Details
 
 - **Tier:** {{ $partner->tier_display }}
 - **Email:** {{ $partner->email }}
@@ -27,7 +25,7 @@ Complete Registration
 @endif
 
 
-## ✅ What's Next?
+## What's Next?
 
 1. **Click the registration button above** to complete your profile
 2. **Review and update your information** if needed

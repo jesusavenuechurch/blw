@@ -25,7 +25,7 @@ class PartnerRegisteredMail extends Mailable
     public function build()
     {
         $mail = $this->markdown('emails.partner.registered')
-            ->subject('Complete Your IPPC 2025 Partner Registration')
+            ->subject(`Confirmation of Registration - {$this->partner->tier}`)
             ->with([
                 'partner' => $this->partner,
                 'registrationUrl' => $this->registrationUrl,

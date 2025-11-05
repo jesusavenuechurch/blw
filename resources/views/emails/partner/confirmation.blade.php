@@ -8,13 +8,13 @@ We look forward to sharing a **wonderful and memorable lounge experience** with 
 
 ---
 
-## 🎟️ Your Access QR Code
+## Your Access QR Code
 
 Please find your **unique QR Code** attached to this email — it will grant you access to the Angel Lounge.
 
 ---
 
-## 💬 Need Assistance?
+## Need Assistance?
 
 Should you have any questions or require further assistance, please don’t hesitate to reach out to us on **KingsChat handle – [@angellounges](https://kingschat.online/user/angellounges)**.
 
