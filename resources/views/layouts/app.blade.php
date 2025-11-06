@@ -73,7 +73,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="relative z-10 glass-effect shadow-inner mt-auto">
+    {{-- <footer class="relative z-10 glass-effect shadow-inner mt-auto">
         <div class="container mx-auto px-4 md:px-6 py-6 md:py-8">
             
             <!-- Mobile: Stacked Layout -->
@@ -112,7 +112,7 @@
                 <div class="flex items-center space-x-6">
                     <!-- Angel Lounge Logo -->
                     <div class="flex items-center space-x-3">
-                        {{-- <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo" --}}
+                        <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">Angel Lounges</span>
                     </div>
@@ -138,6 +138,6 @@
                 </p>
             </div>
         </div>
-    </footer>
+    </footer> --}}
 </body>
 </html>
