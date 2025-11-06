@@ -7,79 +7,27 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @yield('head')
 </head>
-<body class="min-h-screen flex flex-col" style="background: linear-gradient(-45deg, #88886cff, #D6CFC9, #fbed93ff, #edcb0eff); background-size: 400% 400%; animation: gradient 15s ease infinite;">
-    <style>
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Fixed position for decorative elements - no movement */
-        .decorative-blob {
-            position: fixed;
-            border-radius: 50%;
-            mix-blend-mode: multiply;
-            filter: blur(40px);
-            opacity: 0.3;
-            pointer-events: none;
-        }
-        
-        .blob-1 {
-            top: 10%;
-            left: 5%;
-            width: 250px;
-            height: 250px;
-            background: #faf48bff;
-        }
-        
-        .blob-2 {
-            top: 20%;
-            right: 5%;
-            width: 300px;
-            height: 300px;
-            background: #fde047;
-        }
-        
-        .blob-3 {
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: 280px;
-            background: #fbe671ff;
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .blob-1, .blob-2, .blob-3 {
-                width: 150px;
-                height: 150px;
-                filter: blur(30px);
-            }
-        }
-    </style>
-
+<body class="min-h-screen flex flex-col bg-[#f8f7f4]">
+    
+<style>
+  .gold-text {
+    color: #7b5303ff; /* rich gold color */
+  }
+</style>
     <!-- Decorative Elements - Fixed positions, no animation -->
     <div class="decorative-blob blob-1"></div>
     <div class="decorative-blob blob-2"></div>
     <div class="decorative-blob blob-3"></div>
 
     <!-- Navigation -->
-    <nav class="relative z-10 glass-effect shadow-xl">
+    <nav class="relative z-10">
         <div class="container mx-auto px-4 py-4 md:py-5">
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2 md:space-x-3">
                     <div class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
                         <img src="{{ asset('images/logo2.svg') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40">
                     </div>
-                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
+                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r gold-text bg-clip-text text-transparent">
                         Angel Lounges
                     </h1>
                 </div>
@@ -139,14 +87,14 @@
 
                     <!-- ROR Logo -->
                     <div class="flex items-center space-x-2">
-                        <img src="{{ asset('images/ror.svg') }}" alt="ROR Logo"
+                        <img src="{{ asset('images/ror.jpg') }}" alt="ROR Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">Rhapsody of Realities</span>
                     </div>
 
                     <!-- IPPC Logo -->
                     <div class="flex items-center space-x-2">
-                        <img src="{{ asset('images/ippc.svg') }}" alt="IPPC Logo"
+                        <img src="{{ asset('images/ippc.jpeg') }}" alt="IPPC Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">IPPC 2025</span>
                     </div>
