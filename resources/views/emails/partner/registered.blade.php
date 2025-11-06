@@ -6,7 +6,7 @@
 
 Warm greetings in the precious name of our Lord Jesus Christ!
 
-Thank you for your unwavering partnership with Rhapsody of Realities in our year of completeness! We're excited to have you as our honoured guest at the Lounges - Angel Court for IPPC 2025.
+Thank you for your unwavering partnership with Rhapsody of Realities in our Year of Completeness! We're excited to have you as our honoured guest at the Angel Lounges - Angel Court for IPPC 2025.
 
 
 @component('mail::button', ['url' => $registrationUrl, 'color' => 'success'])

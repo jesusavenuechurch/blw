@@ -10,56 +10,41 @@
 <body class="min-h-screen flex flex-col" 
       style="background: linear-gradient(to bottom right, #4169E1, #27408B);">
     <style>
+    /* Body background - royal theme */
+    body {
+        background: linear-gradient(to bottom right, #4169E1, #27408B);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Glass effect - safe fallback for mobile */
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Removed backdrop-filter to prevent crashes on Android */
+    }
+
+    /* Decorative blobs removed for mobile to reduce GPU load */
+    .decorative-blob {
+        display: none;
+    }
+
+    /* Optional: text gradient for headings */
+    .text-gradient {
+        background: linear-gradient(to right, #9b5de5, #4169E1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Responsive spacing */
+    @media (max-width: 768px) {
         .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
         }
-
-        /* Decorative blobs (optional, still static) */
-        .decorative-blob {
-            position: fixed;
-            border-radius: 50%;
-            mix-blend-mode: multiply;
-            filter: blur(40px);
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .blob-1 {
-            top: 10%;
-            left: 5%;
-            width: 250px;
-            height: 250px;
-            background: #a78bfa;
-        }
-
-        .blob-2 {
-            top: 20%;
-            right: 5%;
-            width: 300px;
-            height: 300px;
-            background: #fde047;
-        }
-
-        .blob-3 {
-            bottom: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 280px;
-            height: 280px;
-            background: #fb7185;
-        }
-
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .blob-1, .blob-2, .blob-3 {
-                width: 150px;
-                height: 150px;
-                filter: blur(30px);
-            }
-        }
-    </style>
+    }
+</style>
 
     <!-- Decorative Elements - Fixed positions, no animation -->
     <div class="decorative-blob blob-1"></div>

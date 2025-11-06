@@ -2,7 +2,7 @@
 
 <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo" width="120" style="display:block;margin:0 auto 20px;">
 
-# 🌟 Dear Esteemed {{ $partner->title }} {{ $partner->full_name }},
+# Dear Esteemed **{{ $partner->title }} {{ $partner->full_name }}** - {{ucfirst($partner->tier)}} Partner
 
 Thank you for completing your registration.  
 We are delighted to have you as one of our esteemed partners and honoured guests at the **Angel Lounge**.
