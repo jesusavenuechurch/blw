@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @yield('head')
 </head>
-<body class="min-h-screen flex flex-col" style="background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe); background-size: 400% 400%; animation: gradient 15s ease infinite;">
+<body class="min-h-screen flex flex-col" style="background: linear-gradient(-45deg, #88886cff, #D6CFC9, #fbed93ff, #edcb0eff); background-size: 400% 400%; animation: gradient 15s ease infinite;">
     <style>
         @keyframes gradient {
             0% { background-position: 0% 50%; }
@@ -36,7 +36,7 @@
             left: 5%;
             width: 250px;
             height: 250px;
-            background: #a78bfa;
+            background: #faf48bff;
         }
         
         .blob-2 {
@@ -53,7 +53,7 @@
             transform: translateX(-50%);
             width: 280px;
             height: 280px;
-            background: #fb7185;
+            background: #fbe671ff;
         }
         
         /* Mobile optimizations */
@@ -79,7 +79,7 @@
                     <div class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
                         <img src="{{ asset('images/logo2.svg') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40">
                     </div>
-                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
+                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-500 bg-clip-text text-transparent">
                         Angel Lounges
                     </h1>
                 </div>
