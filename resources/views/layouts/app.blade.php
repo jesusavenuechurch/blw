@@ -7,21 +7,16 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @yield('head')
 </head>
-<body class="min-h-screen flex flex-col" style="background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe); background-size: 400% 400%; animation: gradient 15s ease infinite;">
+<body class="min-h-screen flex flex-col" 
+      style="background: linear-gradient(to bottom right, #4169E1, #27408B);">
     <style>
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
         .glass-effect {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
-        /* Fixed position for decorative elements - no movement */
+
+        /* Decorative blobs (optional, still static) */
         .decorative-blob {
             position: fixed;
             border-radius: 50%;
@@ -30,7 +25,7 @@
             opacity: 0.3;
             pointer-events: none;
         }
-        
+
         .blob-1 {
             top: 10%;
             left: 5%;
@@ -38,7 +33,7 @@
             height: 250px;
             background: #a78bfa;
         }
-        
+
         .blob-2 {
             top: 20%;
             right: 5%;
@@ -46,7 +41,7 @@
             height: 300px;
             background: #fde047;
         }
-        
+
         .blob-3 {
             bottom: 10%;
             left: 50%;
@@ -55,7 +50,7 @@
             height: 280px;
             background: #fb7185;
         }
-        
+
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .blob-1, .blob-2, .blob-3 {
