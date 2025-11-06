@@ -7,44 +7,64 @@
     <script src="https://cdn.tailwindcss.com"></script>
     @yield('head')
 </head>
-<body class="min-h-screen flex flex-col" 
-      style="background: linear-gradient(to bottom right, #4169E1, #27408B);">
+<body class="min-h-screen flex flex-col" style="background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe); background-size: 400% 400%; animation: gradient 15s ease infinite;">
     <style>
-    /* Body background - royal theme */
-    body {
-        background: linear-gradient(to bottom right, #4169E1, #27408B);
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Glass effect - safe fallback for mobile */
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        /* Removed backdrop-filter to prevent crashes on Android */
-    }
-
-    /* Decorative blobs removed for mobile to reduce GPU load */
-    .decorative-blob {
-        display: none;
-    }
-
-    /* Optional: text gradient for headings */
-    .text-gradient {
-        background: linear-gradient(to right, #9b5de5, #4169E1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    /* Responsive spacing */
-    @media (max-width: 768px) {
-        .glass-effect {
-            padding: 0.5rem;
-            border-radius: 0.5rem;
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-    }
-</style>
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Fixed position for decorative elements - no movement */
+        .decorative-blob {
+            position: fixed;
+            border-radius: 50%;
+            mix-blend-mode: multiply;
+            filter: blur(40px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        
+        .blob-1 {
+            top: 10%;
+            left: 5%;
+            width: 250px;
+            height: 250px;
+            background: #a78bfa;
+        }
+        
+        .blob-2 {
+            top: 20%;
+            right: 5%;
+            width: 300px;
+            height: 300px;
+            background: #fde047;
+        }
+        
+        .blob-3 {
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 280px;
+            height: 280px;
+            background: #fb7185;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .blob-1, .blob-2, .blob-3 {
+                width: 150px;
+                height: 150px;
+                filter: blur(30px);
+            }
+        }
+    </style>
 
     <!-- Decorative Elements - Fixed positions, no animation -->
     <div class="decorative-blob blob-1"></div>
@@ -57,7 +77,7 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2 md:space-x-3">
                     <div class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
-                        {{-- <img src="{{ asset('images/logo2.png') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40"> --}}
+                        <img src="{{ asset('images/logo2.svg') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40">
                     </div>
                     <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                         Angel Lounges
@@ -73,7 +93,7 @@
     </main>
 
     <!-- Footer -->
-    {{-- <footer class="relative z-10 glass-effect shadow-inner mt-auto">
+    <footer class="relative z-10 glass-effect shadow-inner mt-auto">
         <div class="container mx-auto px-4 md:px-6 py-6 md:py-8">
             
             <!-- Mobile: Stacked Layout -->
@@ -81,7 +101,7 @@
                 <!-- Logos Grid -->
                 <div class="grid grid-cols-3 gap-4">
                     <div class="flex flex-col items-center">
-                        <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo"
+                        <img src="{{ asset('images/logo.svg') }}" alt="Angel Lounge Logo"
                              class="w-10 h-10 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-[10px] text-gray-600 mt-1 text-center leading-tight">Angel<br>Lounges</span>
                     </div>
@@ -112,21 +132,21 @@
                 <div class="flex items-center space-x-6">
                     <!-- Angel Lounge Logo -->
                     <div class="flex items-center space-x-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo"
+                        <img src="{{ asset('images/logo.svg') }}" alt="Angel Lounge Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">Angel Lounges</span>
                     </div>
 
                     <!-- ROR Logo -->
                     <div class="flex items-center space-x-2">
-                        <img src="{{ asset('images/ror.jpg') }}" alt="ROR Logo"
+                        <img src="{{ asset('images/ror.svg') }}" alt="ROR Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">Rhapsody of Realities</span>
                     </div>
 
                     <!-- IPPC Logo -->
                     <div class="flex items-center space-x-2">
-                        <img src="{{ asset('images/ippc.jpeg') }}" alt="IPPC Logo"
+                        <img src="{{ asset('images/ippc.svg') }}" alt="IPPC Logo"
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">IPPC 2025</span>
                     </div>
@@ -138,6 +158,6 @@
                 </p>
             </div>
         </div>
-    </footer> --}}
+    </footer>
 </body>
 </html>
