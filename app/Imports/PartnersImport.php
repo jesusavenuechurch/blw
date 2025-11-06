@@ -20,7 +20,7 @@ class PartnersImport implements ToCollection, WithHeadingRow
                 Log::info("Partner already exists: {$row['email']} - Skipping");
                 continue; // Skip this row
             }
-
+           //dd($row);
             $partner = Partner::create([
                 'title' => $row['title'],
                 'full_name' => $row['full_name'],
@@ -30,14 +30,11 @@ class PartnersImport implements ToCollection, WithHeadingRow
                 'zone' => $row['zone'] ?? null,
                 'group' => $row['group'] ?? null,
                 'church' => $row['church'] ?? null,
-                'ror_copies_sponsored' => $row['ror_copies_sponsored'] ?? 0,
-                'will_attend_ippc' => $row['will_attend_ippc'] ?? false,
-                'will_be_at_exhibition' => $row['will_be_at_exhibition'] ?? false,
-                'delivery_method' => $row['delivery_method'] ?? null,
-                'email_pending' => true, // Mark as pending
+                'tier' => strtoupper(trim($row['tier'] ?? '')), // handle DIAMOND properly
+                'ror_copies_sponsored' => (int) str_replace(',', '', $row['copies_sponsored'] ?? 0),
             ]);
 
-            Log::info("Partner created via import: ID={$partner->id}, Email={$partner->email}");
+            Log::info("Partner created via import: ID={$partner->id}, tier={$partner->tier}");
             
             // Refresh to ensure QR code path is loaded
             $partner->refresh();

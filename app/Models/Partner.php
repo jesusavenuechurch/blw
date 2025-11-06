@@ -52,6 +52,32 @@ class Partner extends Model
         'token_used_at' => 'datetime',
     ];
 
+public function setTierAttribute($value)
+{
+    // Normalize: lowercase, trim, and remove any emojis or symbols
+    $normalized = strtolower(trim($value));
+    $normalized = preg_replace('/[^\p{L}\s_]+/u', '', $normalized);
+
+    // If multiple tiers are written (e.g., "diamond gold"), take the first word
+    $firstWord = explode(' ', $normalized)[0] ?? $normalized;
+
+    $map = [
+        'ruby' => 'ruby',
+        'silver' => 'silver',
+        'gold' => 'gold',
+        'diamond' => 'diamond',
+        'as' => 'as_one_man', // handle "as one man"
+        'as_one_man' => 'as_one_man',
+        'as one man' => 'as_one_man',
+        'top' => 'top_individual', // handle "top individual partner"
+        'top_individual_partner' => 'top_individual',
+    ];
+
+    // Fallback: if firstWord isn't a known tier, store it as-is
+    $this->attributes['tier'] = $map[$firstWord] ?? $firstWord;
+}
+
+
     /**
      * Get the color for the partner's tier
      */
