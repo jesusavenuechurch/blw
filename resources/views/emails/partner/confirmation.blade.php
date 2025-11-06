@@ -19,7 +19,8 @@ Please find your **unique QR Code** attached to this email — it will grant you
 
 ## Need Assistance?
 
-Should you have any questions or require further assistance, please don’t hesitate to reach out to us on **KingsChat handle – [@angellounges](https://kingschat.online/user/angellounges)**.
+Should you have any questions or require further assistance, please don’t hesitate to reach out to us on **
+KingsChat handle – [@angellounges](https://kingschat.online/user/angellounges)**.
 
 ---
 

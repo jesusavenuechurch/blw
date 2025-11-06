@@ -25,7 +25,7 @@
             </div>
         @endisset
         
-        <a href="mailto:support@church.com" class="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition duration-300">
+        <a href="mailto:support@angel-lounge.com" class="inline-block bg-gradient-to-r from-purple-600 to-blue-500 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition duration-300">
             Contact Support
         </a>
     </div>
