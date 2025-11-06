@@ -57,7 +57,7 @@
             <div class="flex justify-between items-center">
                 <div class="flex items-center space-x-2 md:space-x-3">
                     <div class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
-                        <img src="{{ asset('images/logo2.png') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40">
+                        {{-- <img src="{{ asset('images/logo2.png') }}" alt="Angel Lounges Logo" class="w-full h-full object-contain rounded-full shadow-md border border-white/40"> --}}
                     </div>
                     <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                         Angel Lounges
@@ -112,7 +112,7 @@
                 <div class="flex items-center space-x-6">
                     <!-- Angel Lounge Logo -->
                     <div class="flex items-center space-x-3">
-                        <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo"
+                        {{-- <img src="{{ asset('images/logo.png') }}" alt="Angel Lounge Logo" --}}
                              class="w-12 h-12 object-contain rounded-full border border-white/40 shadow-md">
                         <span class="text-gray-600 text-sm font-medium">Angel Lounges</span>
                     </div>
