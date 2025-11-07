@@ -119,6 +119,7 @@
                                 <option value="Deacon" {{ old('title', $partner->title) == 'Deacon' ? 'selected' : '' }}>Deacon</option>
                                 <option value="Deaconess" {{ old('title', $partner->title) == 'Deaconess' ? 'selected' : '' }}>Deaconess</option>
                                 <option value="Pastor" {{ old('title', $partner->title) == 'Pastor' ? 'selected' : '' }}>Pastor</option>
+                                <option value="Reverend" {{ old('title', $partner->title) == 'Reverend' ? 'selected' : '' }}>Pastor</option>
                             </select>
                             @error('title')<p class="text-red-500 text-sm mt-1">{{ $message }}</p>@enderror
                         </div>
@@ -606,6 +607,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <option value="Deacon" {{ old('spouse_title', $partner->spouse_title) == 'Deacon' ? 'selected' : '' }}>Deacon</option>
                                     <option value="Deaconess" {{ old('spouse_title', $partner->spouse_title) == 'Deaconess' ? 'selected' : '' }}>Deaconess</option>
                                     <option value="Pastor" {{ old('spouse_title', $partner->spouse_title) == 'Pastor' ? 'selected' : '' }}>Pastor</option>
+                                    <option value="Reverend" {{ old('title', $partner->title) == 'Reverend' ? 'selected' : '' }}>Pastor</option>
                                 </select>
                             </div>
 

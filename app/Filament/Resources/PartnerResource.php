@@ -41,6 +41,7 @@ class PartnerResource extends Resource
                             'Deacon' => 'Deacon',
                             'Deaconess' => 'Deaconess',
                             'Pastor' => 'Pastor',
+                            'Reverend' => 'Reverend',
                         ])
                         ->label('Title')
                         ->required(),
@@ -203,6 +204,7 @@ Toggle::make('will_be_at_exhibition')
                                 'Deacon' => 'Deacon',
                                 'Deaconess' => 'Deaconess',
                                 'Pastor' => 'Pastor',
+                                'Reverend' => 'Reverend',
                             ])
                             ->label('Spouse Title')
                             ->visible(fn ($get) => $get('coming_with_spouse') === true)
