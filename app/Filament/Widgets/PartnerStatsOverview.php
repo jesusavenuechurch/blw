@@ -33,11 +33,11 @@ class PartnerStatsOverview extends ChartWidget
 
         return [
             'datasets' => [
-                [
-                    'label' => 'Check-ins',
-                    'data' => $checkins,
-                    'backgroundColor' => '#fbbf24', // gold color
-                ],
+                // [
+                //     'label' => 'Check-ins',
+                //     'data' => $checkins,
+                //     'backgroundColor' => '#fbbf24', // gold color
+                // ],
                 [
                     'label' => 'Registrations',
                     'data' => $registrations,
