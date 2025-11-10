@@ -20,10 +20,10 @@ class PartnerStatsOverview extends ChartWidget
             ->values();
 
         // Check-ins per day
-        $checkins = collect(range(0, 6))
-            ->map(fn($i) => Checkin::whereDate('checked_in_at', Carbon::now()->subDays($i))->count())
-            ->reverse()
-            ->values();
+        // $checkins = collect(range(0, 6))
+        //     ->map(fn($i) => Checkin::whereDate('checked_in_at', Carbon::now()->subDays($i))->count())
+        //     ->reverse()
+        //     ->values();
 
         // Registrations per day
         $registrations = collect(range(0, 6))
