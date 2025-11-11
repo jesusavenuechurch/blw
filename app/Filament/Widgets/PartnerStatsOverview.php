@@ -8,7 +8,7 @@ use Filament\Widgets\ChartWidget;
 use Filament\Widgets\TableWidget as BaseTableWidget;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Checkin;
+use App\Models\CheckIn;
 use App\Models\Partner;
 use App\Services\CheckinReportService;
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ class PartnerStatsOverview extends ChartWidget
             ->values();
 
         $checkins = collect(range(0, 6))
-            ->map(fn($i) => Checkin::whereDate('checked_in_at', Carbon::now()->subDays($i))->count())
+            ->map(fn($i) => CheckIn::whereDate('checked_in_at', Carbon::now()->subDays($i))->count())
             ->reverse()
             ->values();
 

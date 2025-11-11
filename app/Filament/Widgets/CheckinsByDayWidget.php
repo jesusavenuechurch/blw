@@ -8,7 +8,7 @@ use Filament\Widgets\ChartWidget;
 use Filament\Widgets\TableWidget as BaseTableWidget;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Checkin;
+use App\Models\CheckIn;
 use App\Models\Partner;
 use App\Services\CheckinReportService;
 use Carbon\Carbon;
@@ -21,7 +21,7 @@ class CheckinsByDayWidget extends BaseTableWidget
     {
         return $table
             ->query(
-                Checkin::query()
+                CheckIn::query()
                     ->with('partner')
                     ->whereDate('checked_in_at', '>=', Carbon::parse('2025-11-11'))
                     ->orderBy('checked_in_at', 'desc')

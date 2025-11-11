@@ -8,7 +8,7 @@ use Filament\Widgets\ChartWidget;
 use Filament\Widgets\TableWidget as BaseTableWidget;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Models\Checkin;
+use App\Models\CheckIn;
 use App\Models\Partner;
 use App\Services\CheckinReportService;
 use Carbon\Carbon;
@@ -21,9 +21,9 @@ class CheckinStatsOverview extends BaseWidget
         $startDate = Carbon::parse('2025-11-11')->startOfDay();
         $now = Carbon::now();
 
-        $totalCheckins = Checkin::whereBetween('checked_in_at', [$startDate, $now->endOfDay()])->count();
-        $todayCheckins = Checkin::whereBetween('checked_in_at', [$today, $now->endOfDay()])->count();
-        $withSpouse = Checkin::whereBetween('checked_in_at', [$startDate, $now->endOfDay()])
+        $totalCheckins = CheckIn::whereBetween('checked_in_at', [$startDate, $now->endOfDay()])->count();
+        $todayCheckins = CheckIn::whereBetween('checked_in_at', [$today, $now->endOfDay()])->count();
+        $withSpouse = CheckIn::whereBetween('checked_in_at', [$startDate, $now->endOfDay()])
             ->whereHas('partner', fn($q) => $q->where('coming_with_spouse', 1))
             ->count();
 

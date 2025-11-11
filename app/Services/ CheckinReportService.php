@@ -3,7 +3,7 @@
 namespace App\Services;
 
 
-use App\Models\Checkin;
+use App\Models\CheckIn;
 use App\Models\Partner;
 use Carbon\Carbon;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -20,7 +20,7 @@ class CheckinReportService
         $endDate = $endDate ?? Carbon::now();
 
         // Get check-ins with partner data
-        $checkins = Checkin::whereBetween('checked_in_at', [$startDate->startOfDay(), $endDate->endOfDay()])
+        $checkins = CheckIn::whereBetween('checked_in_at', [$startDate->startOfDay(), $endDate->endOfDay()])
             ->with('partner')
             ->orderBy('checked_in_at', 'desc')
             ->get();
