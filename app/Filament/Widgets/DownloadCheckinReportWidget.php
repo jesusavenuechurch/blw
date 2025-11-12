@@ -20,7 +20,7 @@ class DownloadCheckinReportWidget extends Widget
 
     public function mount(): void
     {
-        $this->startDate = Carbon::parse('2025-11-11')->format('Y-m-d');
+        $this->startDate = Carbon::parse('2025-11-08')->format('Y-m-d');
         $this->endDate = Carbon::now()->format('Y-m-d');
     }
 

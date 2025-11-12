@@ -18,7 +18,7 @@ class CheckinStatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $today = Carbon::now()->startOfDay();
-        $startDate = Carbon::parse('2025-11-11')->startOfDay();
+        $startDate = Carbon::parse('2025-11-08')->startOfDay();
         $now = Carbon::now();
 
         $totalCheckins = CheckIn::whereBetween('checked_in_at', [$startDate, $now->endOfDay()])->count();
