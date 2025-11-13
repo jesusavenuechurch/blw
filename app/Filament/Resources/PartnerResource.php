@@ -693,9 +693,10 @@ Toggle::make('will_be_at_exhibition')
             ->options([
                 'gold' => '🥇 Gold',
                 'diamond' => '💠 Diamond',
+                'silver' => '🥈 Silver',
             ])
             ->multiple()
-            ->default(['gold', 'diamond'])
+            ->default(['silver', 'gold', 'diamond'])
             ->required(),
 
         TextInput::make('subject')
