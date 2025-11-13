@@ -20,10 +20,14 @@ class SendPartnerEmail implements ShouldQueue
     public $backoff = [60, 300, 600];
 
     public int $partnerId;
+    public ?string $customSubject;
+    public ?string $customMessage;
 
-    public function __construct(Partner $partner)
+    public function __construct(Partner $partner, ?string $customSubject = null, ?string $customMessage = null)
     {
         $this->partnerId = $partner->id;
+        $this->customSubject = $customSubject;
+        $this->customMessage = $customMessage;
         Log::info("SendPartnerEmail job constructed for Partner ID: {$this->partnerId}");
     }
 
@@ -39,10 +43,10 @@ class SendPartnerEmail implements ShouldQueue
             return;
         }
         
-        Log::info("Partner found: {$partner->full_name}, Email: {$partner->email}, email_sent: " . ($partner->email_sent ? 'true' : 'false'));
+        Log::info("Partner found: {$partner->full_name}, Email: {$partner->email}");
         
-        // Check if email was already sent
-        if ($partner->email_sent) {
+        // Check if email was already sent (only skip if using default flow, not custom messages)
+        if (!$this->customMessage && $partner->email_sent) {
             Log::info("Email already sent to Partner ID: {$partner->id} - Skipping");
             return;
         }
@@ -52,9 +56,19 @@ class SendPartnerEmail implements ShouldQueue
         try {
             Log::info("About to send email to: {$partner->email}");
             
-            Mail::to($partner->email)->send(new \App\Mail\PartnerRegisteredMail($partner));
-            
-            Log::info("Mail::send() completed successfully for: {$partner->email}");
+            // If custom subject/message provided, send custom email
+            if ($this->customSubject && $this->customMessage) {
+                Mail::raw($this->customMessage, function ($mail) use ($partner) {
+                    $mail->to($partner->email)
+                        ->subject($this->customSubject);
+                });
+                
+                Log::info("Custom email sent successfully to: {$partner->email}");
+            } else {
+                // Use default PartnerRegisteredMail
+                Mail::to($partner->email)->send(new \App\Mail\PartnerRegisteredMail($partner));
+                Log::info("Default registration email sent successfully to: {$partner->email}");
+            }
             
             $partner->updateQuietly([
                 'email_pending' => false,

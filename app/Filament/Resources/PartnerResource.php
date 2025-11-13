@@ -19,6 +19,8 @@ use Filament\Forms\Components\ViewField;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Filament\Actions;
+use App\Filament\Actions\SendEmailToTiersAction;
 
 class PartnerResource extends Resource
 {
@@ -681,12 +683,76 @@ Toggle::make('will_be_at_exhibition')
                     })
                     ->modalSubmitAction(false)
                     ->modalCancelActionLabel('Close'),
+                    Tables\Actions\Action::make('email_gold_diamond')
+    ->label('📧 Email Gold & Diamond')
+    ->icon('heroicon-o-envelope')
+    ->color('warning')
+    ->form([
+        Select::make('tier')
+            ->label('Select Tier')
+            ->options([
+                'gold' => '🥇 Gold',
+                'diamond' => '💠 Diamond',
+            ])
+            ->multiple()
+            ->default(['gold', 'diamond'])
+            ->required(),
+
+        TextInput::make('subject')
+            ->label('Subject')
+            ->required()
+            ->default('Dinner at Angel Lounges - IPPC 2025'),
+
+        Textarea::make('message')
+            ->label('Message')
+            ->required()
+            ->rows(10)
+            ->default('Dear Esteemed Partners - The Best in the World!
+
+Congratulations on a most impactful IPPC Thursday evening session with our dear Man of God, Pastor Chris Oyakhilome Dsc Dsc DD. What a glorious time of fellowship and impartation!
+
+We are delighted to inform you that dinner will be served immediately after the evening session at our lounges at Angel Court.
+
+Thank you
+Angel Lounges Team'),
+    ])
+    ->action(function (array $data) {
+        $partners = Partner::whereIn('tier', $data['tier'])->get();
+
+        if ($partners->isEmpty()) {
+            Notification::make()
+                ->title('No Partners Found')
+                ->body('No partners found for selected tiers.')
+                ->danger()
+                ->send();
+            return;
+        }
+
+        foreach ($partners as $partner) {
+            SendPartnerEmail::dispatch($partner, $data['subject'], $data['message']);
+        }
+
+        Notification::make()
+            ->title('Success!')
+            ->body("Emails queued for {$partners->count()} partners")
+            ->success()
+            ->send();
+    }),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [];
+    }
+
+    public static function getHeaderActions(): array
+    {
+         return [
+            SendEmailToTiersAction::make(),
+            // ... other actions
+        ];
+        
     }
 
     public static function getPages(): array
