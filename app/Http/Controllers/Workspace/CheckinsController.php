@@ -31,7 +31,7 @@ class CheckinsController extends Controller
                 'arrived' => CheckIn::distinct('partner_id')->count('partner_id'),
             ],
             'week' => fn () => HomeController::lastSevenDays(),
-            'feed' => fn () => CheckIn::with('partner')
+            'feed' => fn () => CheckIn::with(['partner', 'device:id,name'])
                 ->where('checked_in_at', '>=', $start)
                 ->latest('checked_in_at')
                 ->limit(200)
@@ -40,6 +40,7 @@ class CheckinsController extends Controller
                 ->map(fn ($c) => [
                     'id' => $c->id,
                     'checked_in_at' => $c->checked_in_at->toIso8601String(),
+                    'device' => $c->device?->name,
                     'partner' => [
                         'id' => $c->partner->id,
                         'title' => $c->partner->title,

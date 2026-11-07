@@ -12,6 +12,7 @@ interface Props {
         tier: string;
         ror_copies_sponsored: number;
         qr_code_url: string | null;
+        photo_url: string | null;
         registered_at: string | null;
         will_attend_ippc: boolean;
         will_be_at_exhibition: boolean;
@@ -75,13 +76,20 @@ export default function Success({ partner }: Props) {
                                 <div className="text-muted-foreground grid size-56 place-items-center rounded-2xl border border-dashed text-sm">QR code coming by email</div>
                             )}
                         </div>
-                        <div className="mt-6 border-t border-dashed pt-5">
+                        <div className="mt-6 flex items-center gap-4 border-t border-dashed pt-5">
+                            {partner.photo_url && (
+                                <img src={partner.photo_url} alt="" className="size-16 shrink-0 rounded-full object-cover ring-2 ring-[color-mix(in_oklch,var(--gold-2)_50%,transparent)]" />
+                            )}
+                            <div className="min-w-0">
                             <p className="font-serif text-2xl leading-tight">
                                 {partner.title} {partner.full_name}
                             </p>
                             {partner.coming_with_spouse && partner.spouse_name && (
                                 <p className="text-muted-foreground mt-1 text-sm">with {partner.spouse_name}</p>
                             )}
+                            </div>
+                        </div>
+                        <div>
                             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
                                 <div>
                                     <dt className="text-muted-foreground text-xs">ROR copies</dt>

@@ -6,6 +6,7 @@ import {
     MailIcon,
     MoonIcon,
     ScanLineIcon,
+    SmartphoneIcon,
     UserPlusIcon,
     UsersRoundIcon,
     UserCogIcon,
@@ -58,6 +59,7 @@ export function CommandPalette({ open, onOpenChange, onToggleTheme }: { open: bo
         { label: 'People', icon: UsersRoundIcon, url: '/workspace/people', key: 'G P' },
         { label: 'Check-ins', icon: ScanLineIcon, url: '/workspace/check-ins', key: 'G C' },
         { label: 'Outreach', icon: MailIcon, url: '/workspace/outreach', key: 'G O' },
+        { label: 'Scanners', icon: SmartphoneIcon, url: '/workspace/scanners' },
         { label: 'Import', icon: FileUpIcon, url: '/workspace/import' },
         { label: 'Team', icon: UserCogIcon, url: '/workspace/team' },
     ];

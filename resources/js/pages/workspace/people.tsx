@@ -550,7 +550,7 @@ function PersonCard({
         >
             <div className="flex items-start gap-3">
                 <div className="relative">
-                    <PartnerAvatar name={p.full_name} tier={p.tier} />
+                    <PartnerAvatar name={p.full_name} tier={p.tier} photo={p.photo_url} />
                     <span
                         onClick={(e) => {
                             e.stopPropagation();
@@ -669,7 +669,7 @@ function ListView({
                         <Checkbox checked={picked.has(p.id)} onCheckedChange={() => onPick(p.id)} aria-label={`Select ${p.full_name}`} />
                     </span>
                     <span className="flex min-w-0 items-center gap-3">
-                        <PartnerAvatar name={p.full_name} tier={p.tier} className="size-7 text-[10px]" />
+                        <PartnerAvatar name={p.full_name} tier={p.tier} photo={p.photo_url} className="size-7 text-[10px]" />
                         <span className="min-w-0">
                             <span className="block truncate font-medium">
                                 {p.title} {p.full_name}

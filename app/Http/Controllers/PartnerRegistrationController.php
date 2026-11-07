@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Log;
 use App\Support\Options;
 use Inertia\Inertia;
 use Illuminate\Validation\Rule;
+use App\Services\PartnerPhotoService;
+use Illuminate\Support\Facades\URL;
 
 class PartnerRegistrationController extends Controller
 {
@@ -68,7 +70,7 @@ class PartnerRegistrationController extends Controller
     /**
      * Process the registration form
      */
-    public function store(Request $request, $token)
+    public function store(Request $request, $token, PartnerPhotoService $photos)
     {
         $partner = Partner::where('registration_token', $token)->first();
 
@@ -100,6 +102,14 @@ class PartnerRegistrationController extends Controller
                 'nullable', 'string', 'max:1000',
             ],
             'spouse_kc_handle' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:8192',
+            'photo_consent' => $request->hasFile('photo') ? ['accepted'] : ['nullable'],
+        ]);
+
+        $validator->setCustomMessages([
+            'photo_consent.accepted' => 'Please confirm we may use your photo to welcome you at the lounge.',
+            'photo.image' => 'Your photo must be a picture (JPG, PNG or WebP).',
+            'photo.max' => 'Your photo is too large. Please choose one under 8 MB.',
         ]);
 
         if ($validator->fails()) {
@@ -138,6 +148,15 @@ class PartnerRegistrationController extends Controller
             // ✅ Update partner information
             $partner->update($updateData);
 
+            if ($request->hasFile('photo')) {
+                try {
+                    $photos->store($partner, $request->file('photo'));
+                } catch (\Throwable $e) {
+                    // A bad photo should never block registration.
+                    Log::warning("Photo upload failed for partner {$partner->id}: ".$e->getMessage());
+                }
+            }
+
             // ✅ Now mark token as used AFTER successful save
             $partner->markTokenAsUsed();
 
@@ -174,6 +193,9 @@ class PartnerRegistrationController extends Controller
                 'tier' => $partner->tier,
                 'ror_copies_sponsored' => (int) $partner->ror_copies_sponsored,
                 'qr_code_url' => $partner->qr_code_path ? asset('storage/' . $partner->qr_code_path) : null,
+                'photo_url' => $partner->photo_path
+                    ? URL::temporarySignedRoute('partner.photo', now()->addHours(2), ['partner' => $partner->id, 'v' => $partner->photo_version])
+                    : null,
                 'registered_at' => $partner->token_used_at?->toIso8601String(),
                 'will_attend_ippc' => (bool) $partner->will_attend_ippc,
                 'will_be_at_exhibition' => (bool) $partner->will_be_at_exhibition,
@@ -186,10 +208,16 @@ class PartnerRegistrationController extends Controller
         /**
      * Verify partner via QR code scan
      */
-    public function verify($id)
+    public function verify(Request $request, $id)
     {
         try {
             $partner = Partner::findOrFail($id);
+
+            // New QR codes carry the partner's token; a wrong one means a forged code.
+            $token = $request->query('t');
+            if ($token !== null && ! hash_equals((string) $partner->verification_token, (string) $token)) {
+                throw new \RuntimeException('Token mismatch');
+            }
 
             return Inertia::render('partner/verify', [
                 'partner' => [

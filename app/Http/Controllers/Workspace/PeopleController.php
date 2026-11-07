@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PartnerRequest;
 use App\Jobs\SendPartnerEmail;
 use App\Models\Partner;
+use App\Services\PartnerPhotoService;
 use App\Support\Options;
 use App\Support\PartnerData;
 use Illuminate\Http\Request;
@@ -90,6 +91,26 @@ class PeopleController extends Controller
             : back()->with('error', 'Could not generate the QR code. Check the logs for details.');
     }
 
+    public function uploadPhoto(Request $request, Partner $partner, PartnerPhotoService $photos)
+    {
+        $request->validate(['photo' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:8192']]);
+
+        try {
+            $photos->store($partner, $request->file('photo'));
+        } catch (\Throwable $e) {
+            return back()->with('error', 'That photo could not be used. Try a JPG or PNG.');
+        }
+
+        return back()->with('success', 'Photo updated.');
+    }
+
+    public function removePhoto(Partner $partner, PartnerPhotoService $photos)
+    {
+        $photos->remove($partner);
+
+        return back()->with('success', 'Photo removed.');
+    }
+
     public function bulk(Request $request)
     {
         $data = $request->validate([
@@ -123,7 +144,7 @@ class PeopleController extends Controller
 
             case 'delete':
                 $count = $partners->count();
-                Partner::whereIn('id', $partners->pluck('id'))->delete();
+                $partners->each->delete();
 
                 return back()->with('success', "{$count} partner(s) removed.");
         }

@@ -20,6 +20,7 @@ interface Props {
     feed: {
         id: number;
         checked_in_at: string;
+        device: string | null;
         partner: { id: number; title: string | null; full_name: string; tier: string; coming_with_spouse: boolean; spouse_name: string | null };
     }[];
     range: { start: string; end: string };
@@ -174,9 +175,9 @@ export default function Checkins({ stats, week, feed, range }: Props) {
                                                 <p className="truncate text-sm font-medium">
                                                     {f.partner.title} {f.partner.full_name}
                                                 </p>
-                                                {f.partner.coming_with_spouse && (
-                                                    <p className="text-muted-foreground truncate text-xs">with {f.partner.spouse_name || 'spouse'}</p>
-                                                )}
+                                                <p className="text-muted-foreground truncate text-xs">
+                                                    {[f.partner.coming_with_spouse ? `with ${f.partner.spouse_name || 'spouse'}` : null, f.device].filter(Boolean).join(' · ')}
+                                                </p>
                                             </div>
                                             <TierBadge tier={f.partner.tier} short className="hidden sm:inline-flex" />
                                             <span className="text-muted-foreground w-16 text-right text-xs tabular-nums">{format(new Date(f.checked_in_at), 'h:mm a')}</span>

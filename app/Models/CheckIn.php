@@ -11,7 +11,9 @@ class CheckIn extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uuid',
         'partner_id',
+        'scanner_device_id',
         'checked_in_at',
     ];
 
@@ -22,5 +24,10 @@ class CheckIn extends Model
     public function partner(): BelongsTo
     {
         return $this->belongsTo(Partner::class);
+    }
+
+    public function device(): BelongsTo
+    {
+        return $this->belongsTo(ScannerDevice::class, 'scanner_device_id');
     }
 }

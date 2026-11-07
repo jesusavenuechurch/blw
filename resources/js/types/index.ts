@@ -31,6 +31,7 @@ export interface PartnerCard {
     spouse_name: string | null;
     ror_copies_sponsored: number;
     has_qr: boolean;
+    photo_url: string | null;
     created_at: string | null;
     updated_at: string | null;
 }
@@ -43,6 +44,7 @@ export interface PartnerDetail extends PartnerCard {
     email_response: string | null;
     registration_url: string | null;
     qr_code_url: string | null;
+    photo_consent_at: string | null;
     token_used_at: string | null;
     check_ins: { id: number; checked_in_at: string }[];
     timeline: { type: string; label: string; at: string | null }[];

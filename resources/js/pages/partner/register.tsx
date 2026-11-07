@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { PhotoPicker } from '@/components/photo-picker';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -51,6 +53,8 @@ const FIELD_SECTION: Record<string, (typeof SECTIONS)[number]['id']> = {
     full_name: 'you',
     phone: 'you',
     kc_handle: 'you',
+    photo: 'you',
+    photo_consent: 'you',
     region: 'church',
     zone: 'church',
     group: 'church',
@@ -86,6 +90,8 @@ export default function Register({ token, partner, options }: Props) {
         spouse_title: partner.spouse_title ?? '',
         spouse_name: partner.spouse_name ?? '',
         spouse_kc_handle: partner.spouse_kc_handle ?? '',
+        photo: null as File | null,
+        photo_consent: false,
     });
     const { data, setData, errors, processing } = form;
 
@@ -116,7 +122,7 @@ export default function Register({ token, partner, options }: Props) {
             will_be_at_exhibition: d.will_attend_ippc ? d.will_be_at_exhibition : false,
             delivery_method: needsDelivery ? d.delivery_method : '',
         }));
-        form.post(`/partner/register/${token}`, { preserveScroll: true });
+        form.post(`/partner/register/${token}`, { preserveScroll: true, forceFormData: !!data.photo });
     }
 
     return (
@@ -178,6 +184,30 @@ export default function Register({ token, partner, options }: Props) {
 
                 <div className="min-w-0 space-y-6">
                     <Section id="you" step={1} title="About you" description="How should we address you at the lounge?">
+                        <div className="bg-muted/40 mb-6 rounded-xl border p-4">
+                            <PhotoPicker
+                                value={data.photo}
+                                name={data.full_name || partner.full_name}
+                                onChange={(f) => setData((d) => ({ ...d, photo: f, photo_consent: f ? d.photo_consent : false }))}
+                                invalid={!!errors.photo}
+                            />
+                            {errors.photo && <p className="text-destructive mt-2 text-xs">{errors.photo}</p>}
+                            {data.photo && (
+                                <label className="mt-4 flex items-start gap-3 text-sm">
+                                    <Checkbox
+                                        checked={data.photo_consent}
+                                        onCheckedChange={(v) => setData('photo_consent', v === true)}
+                                        className="mt-0.5"
+                                        aria-invalid={!!errors.photo_consent || undefined}
+                                    />
+                                    <span>
+                                        I agree that the Angel Lounges team may use this photo to recognise and welcome me at the lounge.
+                                        {errors.photo_consent && <span className="text-destructive mt-1 block text-xs">{errors.photo_consent}</span>}
+                                    </span>
+                                </label>
+                            )}
+                            {!data.photo && <p className="text-muted-foreground mt-3 text-xs">Optional, but it helps our ushers greet you by name.</p>}
+                        </div>
                         <div className="grid gap-5 sm:grid-cols-2">
                             <Field label="Title" required error={errors.title}>
                                 <Select value={data.title} onValueChange={(v) => setData('title', v)}>

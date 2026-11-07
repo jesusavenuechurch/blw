@@ -34,6 +34,7 @@ class PartnerData
             'spouse_name' => $p->spouse_name,
             'ror_copies_sponsored' => (int) $p->ror_copies_sponsored,
             'has_qr' => filled($p->qr_code_path),
+            'photo_url' => $p->photo_path ? route('workspace.people.photo', ['partner' => $p->id, 'v' => $p->photo_version]) : null,
             'created_at' => $p->created_at?->toIso8601String(),
             'updated_at' => $p->updated_at?->toIso8601String(),
         ];
@@ -69,6 +70,7 @@ class PartnerData
             'delivery_method' => $p->delivery_method,
             'email_response' => $p->email_response,
             'registration_url' => $p->registration_url,
+            'photo_consent_at' => $p->photo_consent_at?->toIso8601String(),
             'qr_code_url' => $p->qr_code_path ? Storage::disk('public')->url($p->qr_code_path) : null,
             'token_used_at' => $p->token_used_at?->toIso8601String(),
             'check_ins' => $p->checkIns->map(fn ($c) => [

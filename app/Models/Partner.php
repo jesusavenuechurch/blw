@@ -45,6 +45,9 @@ class Partner extends Model
         'spouse_title',
         'spouse_name',  
         'spouse_kc_handle',
+        'photo_path',
+        'photo_updated_at',
+        'photo_consent_at',
     ];
 
     protected $casts = [
@@ -55,6 +58,8 @@ class Partner extends Model
         'email_sent' => 'boolean',
         'email_failed' => 'boolean',
         'token_used_at' => 'datetime',
+        'photo_updated_at' => 'datetime',
+        'photo_consent_at' => 'datetime',
     ];
 
     /** Tier keys in display order. */
@@ -178,6 +183,14 @@ public function setTierAttribute($value)
             Log::info("Tokens generated for new partner: {$partner->email}");
         });
 
+        // Scanners drop deleted partners on their next sync.
+        static::deleted(function ($partner) {
+            PartnerTombstone::create(['partner_id' => $partner->id, 'deleted_at' => now()]);
+            if ($partner->photo_path) {
+                Storage::disk('local')->delete($partner->photo_path);
+            }
+        });
+
         // Regenerate QR code when tier changes
         static::updated(function ($partner) {
             if ($partner->isDirty('tier')) {
@@ -193,7 +206,7 @@ public function setTierAttribute($value)
     public function generateQrCode(): ?string
     {
         try {
-            $verificationUrl = route('partner.verify', ['id' => $this->id]);
+            $verificationUrl = $this->verification_url;
             if (!$verificationUrl) {
                 Log::warning("Route partner.verify not found for Partner ID: {$this->id}");
                 return null;
@@ -220,6 +233,24 @@ public function setTierAttribute($value)
             ]);
             return null;
         }
+    }
+
+    /**
+     * The link encoded in the partner's QR code. The token makes the code
+     * impossible to guess from the partner's ID alone.
+     */
+    public function getVerificationUrlAttribute(): string
+    {
+        return route('partner.verify', array_filter([
+            'id' => $this->id,
+            't' => $this->verification_token,
+        ]));
+    }
+
+    /** Changes whenever the photo does, so apps know to download it again. */
+    public function getPhotoVersionAttribute(): ?int
+    {
+        return $this->photo_path ? ($this->photo_updated_at?->getTimestamp() ?? 1) : null;
     }
 
     /**

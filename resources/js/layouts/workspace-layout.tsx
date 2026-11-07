@@ -11,6 +11,7 @@ import {
     MoonIcon,
     ScanLineIcon,
     SearchIcon,
+    SmartphoneIcon,
     SofaIcon,
     SunIcon,
     UserCogIcon,
@@ -38,6 +39,7 @@ const NAV = [
     { label: 'People', href: '/workspace/people', icon: UsersRoundIcon },
     { label: 'Check-ins', href: '/workspace/check-ins', icon: ScanLineIcon },
     { label: 'Outreach', href: '/workspace/outreach', icon: MailIcon },
+    { label: 'Scanners', href: '/workspace/scanners', icon: SmartphoneIcon },
     { label: 'Import', href: '/workspace/import', icon: FileUpIcon },
     { label: 'Team', href: '/workspace/team', icon: UserCogIcon },
 ];

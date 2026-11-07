@@ -1,8 +1,9 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { router } from '@inertiajs/react';
 import {
     AlertTriangleIcon,
     AtSignIcon,
+    CameraIcon,
     BadgeCheckIcon,
     CheckIcon,
     CopyIcon,
@@ -46,6 +47,7 @@ import {
 import { EMAIL_META, STAGE_META, tierMeta } from '@/lib/tiers';
 import { ago, when } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { shrinkImage } from '@/lib/image';
 import type { FormOptions, PartnerDetail } from '@/types';
 
 export function PartnerPanel({
@@ -64,6 +66,28 @@ export function PartnerPanel({
     const [tab, setTab] = useState('overview');
     const [busy, setBusy] = useState<string | null>(null);
     const [confirm, setConfirm] = useState<null | 'regenerate' | 'delete'>(null);
+    const photoInput = useRef<HTMLInputElement>(null);
+
+    async function uploadPhoto(file?: File) {
+        if (!partner || !file) return;
+        setBusy('photo');
+        const photo = await shrinkImage(file);
+        router.post(`/workspace/people/${partner.id}/photo`, { photo }, {
+            forceFormData: true,
+            preserveScroll: true,
+            preserveState: true,
+            onFinish: () => {
+                setBusy(null);
+                if (photoInput.current) photoInput.current.value = '';
+            },
+        });
+    }
+
+    function removePhoto() {
+        if (!partner) return;
+        setBusy('photo');
+        router.delete(`/workspace/people/${partner.id}/photo`, { preserveScroll: true, preserveState: true, onFinish: () => setBusy(null) });
+    }
 
     function act(action: 'resend' | 'regenerate' | 'qr') {
         if (!partner) return;
@@ -105,7 +129,7 @@ export function PartnerPanel({
                             style={{ backgroundImage: `radial-gradient(30rem 12rem at 0% -40%, color-mix(in oklch, ${color} 22%, transparent), transparent 70%)` }}
                         >
                             <div className="flex items-start gap-4">
-                                <PartnerAvatar name={partner.full_name} tier={partner.tier} className="size-14 text-lg" />
+                                <PartnerAvatar name={partner.full_name} tier={partner.tier} photo={partner.photo_url} className="size-14 text-lg" />
                                 <div className="min-w-0 flex-1 pr-8">
                                     <SheetTitle className="font-serif text-[1.75rem] leading-tight font-normal tracking-tight">
                                         {partner.title} {partner.full_name}
@@ -251,6 +275,36 @@ export function PartnerPanel({
                                 <Stat label="Check-ins" value={String(partner.check_ins.length)} />
                                 <Stat label="Added" value={ago(partner.created_at)} small />
                             </div>
+
+                            <section className="mt-8">
+                                <h4 className="text-muted-foreground mb-3 text-[11px] font-semibold tracking-wider uppercase">Photo for the scanner</h4>
+                                <div className="flex items-center gap-4 rounded-xl border p-4">
+                                    <div className="bg-muted grid size-20 shrink-0 place-items-center overflow-hidden rounded-full">
+                                        {partner.photo_url ? (
+                                            <img src={partner.photo_url} alt={`Photo of ${partner.full_name}`} className="size-full object-cover" />
+                                        ) : (
+                                            <CameraIcon className="text-muted-foreground size-6" />
+                                        )}
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-medium">{partner.photo_url ? 'Shown when their pass is scanned' : 'No photo yet'}</p>
+                                        <p className="text-muted-foreground text-xs">
+                                            {partner.photo_consent_at ? `Consent given ${when(partner.photo_consent_at)}` : 'Ushers see this face to confirm it’s really them.'}
+                                        </p>
+                                        <div className="mt-2.5 flex gap-2">
+                                            <Button size="sm" variant="outline" onClick={() => photoInput.current?.click()} disabled={busy === 'photo'}>
+                                                {busy === 'photo' ? <Loader2Icon className="animate-spin" /> : <CameraIcon />} {partner.photo_url ? 'Replace' : 'Upload photo'}
+                                            </Button>
+                                            {partner.photo_url && (
+                                                <Button size="sm" variant="ghost" onClick={removePhoto} disabled={busy === 'photo'}>
+                                                    <Trash2Icon /> Remove
+                                                </Button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <input ref={photoInput} type="file" accept="image/*" className="hidden" onChange={(e) => uploadPhoto(e.target.files?.[0])} />
+                                </div>
+                            </section>
 
                             <section className="mt-8">
                                 <h4 className="text-muted-foreground mb-3 text-[11px] font-semibold tracking-wider uppercase">Church</h4>

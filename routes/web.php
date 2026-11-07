@@ -12,6 +12,11 @@ Route::get('/partner/register/{token}', [PartnerRegistrationController::class, '
 Route::post('/partner/register/{token}', [PartnerRegistrationController::class, 'store'])->name('partner.store');
 Route::get('partner/success', [PartnerRegistrationController::class, 'success'])->name('partner.success');
 
+// A partner's own photo, via a signed link from their success page
+Route::get('/partner/photo/{partner}', App\Http\Controllers\PartnerPhotoController::class)
+    ->middleware('signed')
+    ->name('partner.photo');
+
 // Partner QR code verification (public, encoded in every QR code)
 Route::get('/partner/verify/{id}', [PartnerRegistrationController::class, 'verify'])->name('partner.verify');
 
@@ -38,6 +43,9 @@ Route::middleware('auth')->prefix('workspace')->name('workspace.')->group(functi
     Route::post('/people/{partner}/resend', [Workspace\PeopleController::class, 'resend'])->name('people.resend');
     Route::post('/people/{partner}/regenerate', [Workspace\PeopleController::class, 'regenerate'])->name('people.regenerate');
     Route::post('/people/{partner}/qr', [Workspace\PeopleController::class, 'qr'])->name('people.qr');
+    Route::get('/people/{partner}/photo', App\Http\Controllers\PartnerPhotoController::class)->name('people.photo');
+    Route::post('/people/{partner}/photo', [Workspace\PeopleController::class, 'uploadPhoto'])->name('people.photo.store');
+    Route::delete('/people/{partner}/photo', [Workspace\PeopleController::class, 'removePhoto'])->name('people.photo.destroy');
 
     Route::get('/outreach', [Workspace\OutreachController::class, 'index'])->name('outreach');
     Route::post('/outreach', [Workspace\OutreachController::class, 'send'])->name('outreach.send');
@@ -47,6 +55,11 @@ Route::middleware('auth')->prefix('workspace')->name('workspace.')->group(functi
 
     Route::get('/import', [Workspace\ImportController::class, 'index'])->name('import');
     Route::post('/import', [Workspace\ImportController::class, 'store'])->name('import.store');
+
+    Route::get('/scanners', [Workspace\ScannersController::class, 'index'])->name('scanners');
+    Route::post('/scanners', [Workspace\ScannersController::class, 'store'])->name('scanners.store');
+    Route::post('/scanners/{device}/renew', [Workspace\ScannersController::class, 'renew'])->name('scanners.renew');
+    Route::delete('/scanners/{device}', [Workspace\ScannersController::class, 'destroy'])->name('scanners.destroy');
 
     Route::get('/team', [Workspace\TeamController::class, 'index'])->name('team');
     Route::post('/team', [Workspace\TeamController::class, 'store'])->name('team.store');
