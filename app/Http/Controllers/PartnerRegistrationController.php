@@ -6,6 +6,9 @@ use App\Models\Partner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Support\Options;
+use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 
 class PartnerRegistrationController extends Controller
 {
@@ -19,22 +22,47 @@ class PartnerRegistrationController extends Controller
 
         // ✅ Check only that the token exists and partner not yet registered
         if (!$partner) {
-            return view('partner.registration-invalid', [
+            return Inertia::render('partner/invalid', [
                 'message' => 'Invalid registration link. Please contact support.',
-                'partner' => null
             ]);
         }
 
         if ($partner->is_registered) {
-            return view('partner.registration-invalid', [
-                'message' => 'This registration link has already been used on ' . 
+            return Inertia::render('partner/invalid', [
+                'message' => 'This registration link has already been used on ' .
                             optional($partner->token_used_at)->format('F j, Y \a\t g:i A'),
-                'partner' => $partner
+                'name' => $partner->full_name,
             ]);
         }
 
         // ✅ Do not mark the token as used here — just show the form
-        return view('partner.register', compact('partner', 'token'));
+        return Inertia::render('partner/register', [
+            'token' => $token,
+            'partner' => [
+                'title' => $partner->title,
+                'designation' => $partner->designation,
+                'full_name' => $partner->full_name,
+                'email' => $partner->email,
+                'phone' => $partner->phone,
+                'region' => $partner->region,
+                'zone' => $partner->zone,
+                'group' => $partner->group,
+                'church' => $partner->church,
+                'tier' => $partner->tier,
+                'ror_copies_sponsored' => $partner->ror_copies_sponsored,
+                'will_attend_ippc' => (bool) $partner->will_attend_ippc,
+                'will_be_at_exhibition' => (bool) $partner->will_be_at_exhibition,
+                'delivery_method' => $partner->delivery_method,
+                'coming_with_spouse' => (bool) $partner->coming_with_spouse,
+                'spouse_title' => $partner->spouse_title,
+                'spouse_name' => $partner->spouse_name,
+                'spouse_kc_handle' => $partner->spouse_kc_handle,
+            ],
+            'options' => [
+                'titles' => Options::TITLES,
+                'designations' => Options::DESIGNATIONS,
+            ],
+        ]);
     }
     /**
      * Process the registration form
@@ -51,8 +79,8 @@ class PartnerRegistrationController extends Controller
 
         // Validate form data
         $validator = Validator::make($request->all(), [
-            'title' => 'required|in:Brother,Sister,Deacon,Deaconess,Pastor',
-            'designation' => 'required|in:Non-Pastoring,BLW Group Secretary,BLW Zonal Secretary,BLW Regional Secretary,Church Pastor,Sub-Group Pastor,Group Pastor,Asst. Zonal Pastor,Zonal Pastor,Zonal Director,Regional Pastor',
+            'title' => ['required', Rule::in(Options::TITLES)],
+            'designation' => ['required', Rule::in(Options::DESIGNATIONS)],
             'full_name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
             'kc_handle' => 'nullable|string|max:255',
@@ -63,10 +91,13 @@ class PartnerRegistrationController extends Controller
             'ror_copies_sponsored' => 'nullable|integer|min:0',
             'will_attend_ippc' => 'boolean',
             'will_be_at_exhibition' => 'nullable|boolean',
-            'delivery_method' => 'nullable|string|max:1000',
             'coming_with_spouse' => 'boolean',
-            'spouse_title' => 'nullable|required_if:coming_with_spouse,1|in:Brother,Sister,Deacon,Deaconess,Pastor',
-            'spouse_name' => 'nullable|required_if:coming_with_spouse,1|string|max:255',
+            'spouse_title' => ['nullable', 'required_if:coming_with_spouse,true', Rule::in(Options::TITLES)],
+            'spouse_name' => 'nullable|required_if:coming_with_spouse,true|string|max:255',
+            'delivery_method' => [
+                ($request->boolean('will_attend_ippc') && $request->boolean('will_be_at_exhibition')) ? 'nullable' : 'required',
+                'nullable', 'string', 'max:1000',
+            ],
             'spouse_kc_handle' => 'nullable|string|max:255',
         ]);
 
@@ -111,6 +142,9 @@ class PartnerRegistrationController extends Controller
 
             Log::info("Partner registration completed for: {$partner->email}");
 
+            // Remember who just registered so the success page shows *their* QR code.
+            $request->session()->put('registered_partner_id', $partner->id);
+
             return redirect()->route('partner.success');
 
         } catch (\Exception $e) {
@@ -122,19 +156,32 @@ class PartnerRegistrationController extends Controller
         }
     }
 
-    public function success(Partner $partner)
+    public function success(Request $request)
     {
-         // Get the last registered partner for this session
-        $partner = Partner::where('is_registered', true)
-                        ->latest('token_used_at')
-                        ->first();
-                        
-        if (!$partner) {
-            return redirect()->route('partner.register', ['token' => request('token')])
-                ->with('error', 'Session expired. Please try again.');
+        $partner = Partner::find($request->session()->get('registered_partner_id'));
+
+        if (!$partner || !$partner->is_registered) {
+            return Inertia::render('partner/invalid', [
+                'message' => 'We couldn’t find your registration in this browser. Please use the link in your email.',
+            ]);
         }
-        return view('partner.registration-success', compact('partner'));
+
+        return Inertia::render('partner/success', [
+            'partner' => [
+                'title' => $partner->title,
+                'full_name' => $partner->full_name,
+                'tier' => $partner->tier,
+                'ror_copies_sponsored' => (int) $partner->ror_copies_sponsored,
+                'qr_code_url' => $partner->qr_code_path ? asset('storage/' . $partner->qr_code_path) : null,
+                'registered_at' => $partner->token_used_at?->toIso8601String(),
+                'will_attend_ippc' => (bool) $partner->will_attend_ippc,
+                'will_be_at_exhibition' => (bool) $partner->will_be_at_exhibition,
+                'coming_with_spouse' => (bool) $partner->coming_with_spouse,
+                'spouse_name' => $partner->spouse_name,
+            ],
+        ]);
     }
+
         /**
      * Verify partner via QR code scan
      */
@@ -142,13 +189,22 @@ class PartnerRegistrationController extends Controller
     {
         try {
             $partner = Partner::findOrFail($id);
-            
-            return view('partner.verification', compact('partner'));
-            
+
+            return Inertia::render('partner/verify', [
+                'partner' => [
+                    'title' => $partner->title,
+                    'full_name' => $partner->full_name,
+                    'tier' => $partner->tier,
+                    'is_registered' => (bool) $partner->is_registered,
+                    'coming_with_spouse' => (bool) $partner->coming_with_spouse,
+                    'spouse_title' => $partner->spouse_title,
+                    'spouse_name' => $partner->spouse_name,
+                ],
+            ]);
+
         } catch (\Exception $e) {
-            return view('partner.registration-invalid', [
+            return Inertia::render('partner/invalid', [
                 'message' => 'Invalid verification code. Please contact support.',
-                'partner' => null
             ]);
         }
     }

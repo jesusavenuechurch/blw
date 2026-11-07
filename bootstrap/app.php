@@ -13,6 +13,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\HandleInertiaRequests::class,
+        ]);
+
+        $middleware->redirectGuestsTo('/login');
+        $middleware->redirectUsersTo('/workspace');
+
             $middleware->replace('api', HandleCors::class, function ($middleware) {
             return $middleware->setOptions([
                 'paths' => ['api/*', 'sanctum/csrf-cookie'],

@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class PartnersImport implements ToCollection, WithHeadingRow
 {
+    public int $created = 0;
+
+    public int $skipped = 0;
+
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
@@ -18,6 +22,7 @@ class PartnersImport implements ToCollection, WithHeadingRow
             
             if ($existingPartner) {
                 Log::info("Partner already exists: {$row['email']} - Skipping");
+                $this->skipped++;
                 continue; // Skip this row
             }
            //dd($row);
@@ -34,6 +39,7 @@ class PartnersImport implements ToCollection, WithHeadingRow
                 'ror_copies_sponsored' => (int) str_replace(',', '', $row['copies_sponsored'] ?? 0),
             ]);
 
+            $this->created++;
             Log::info("Partner created via import: ID={$partner->id}, tier={$partner->tier}");
             
             // Refresh to ensure QR code path is loaded

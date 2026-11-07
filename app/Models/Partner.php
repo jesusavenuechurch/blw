@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Mail\PartnerConfirmationMail;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Partner extends Model
 {
@@ -49,8 +50,48 @@ class Partner extends Model
         'will_attend_ippc' => 'boolean',
         'will_be_at_exhibition' => 'boolean',
         'is_registered' => 'boolean',
+        'email_pending' => 'boolean',
+        'email_sent' => 'boolean',
+        'email_failed' => 'boolean',
         'token_used_at' => 'datetime',
     ];
+
+    /** Tier keys in display order. */
+    public const TIERS = ['ruby', 'silver', 'gold', 'diamond', 'as_one_man', 'top_individual'];
+
+    public function checkIns(): HasMany
+    {
+        return $this->hasMany(CheckIn::class);
+    }
+
+    /**
+     * Email delivery state derived from the email_* flags.
+     */
+    public function getEmailStateAttribute(): string
+    {
+        return match (true) {
+            (bool) $this->email_failed => 'failed',
+            (bool) $this->email_sent => 'sent',
+            (bool) $this->email_pending => 'pending',
+            default => 'none',
+        };
+    }
+
+    /**
+     * Where the partner is in the journey: invited → delivered → registered → checked_in.
+     * Expects check_ins_count to be loaded (withCount('checkIns')) when available.
+     */
+    public function getStageAttribute(): string
+    {
+        $checkIns = $this->check_ins_count ?? ($this->relationLoaded('checkIns') ? $this->checkIns->count() : $this->checkIns()->count());
+
+        return match (true) {
+            $checkIns > 0 => 'checked_in',
+            (bool) $this->is_registered => 'registered',
+            (bool) $this->email_sent => 'delivered',
+            default => 'invited',
+        };
+    }
 
 public function setTierAttribute($value)
 {
