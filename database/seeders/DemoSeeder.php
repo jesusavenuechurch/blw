@@ -42,6 +42,7 @@ class DemoSeeder extends Seeder
                 'full_name' => $name,
                 'email' => Str::slug($name, '.').'.'.$i.'@example.com',
                 'phone' => '+23480'.mt_rand(10000000, 99999999),
+                'kc_handle' => $registered ? Str::slug($name, '').mt_rand(1, 99) : null,
                 'region' => 'Region '.mt_rand(1, 6),
                 'zone' => $zones[$c],
                 'group' => 'Group '.chr(65 + mt_rand(0, 5)),

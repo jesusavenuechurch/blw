@@ -29,6 +29,7 @@ class PartnerRequest extends FormRequest
             'full_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('partners', 'email')->ignore($partner?->id)],
             'phone' => ['nullable', 'string', 'max:20'],
+            'kc_handle' => ['nullable', 'string', 'max:255'],
             'region' => ['nullable', 'string', 'max:255'],
             'zone' => ['nullable', 'string', 'max:255'],
             'group' => ['nullable', 'string', 'max:255'],
@@ -63,6 +64,7 @@ class PartnerRequest extends FormRequest
         $data['will_be_at_exhibition'] = $data['will_attend_ippc'] && $this->boolean('will_be_at_exhibition');
         $data['coming_with_spouse'] = $this->boolean('coming_with_spouse');
         $data['ror_copies_sponsored'] = (int) ($data['ror_copies_sponsored'] ?? 0);
+        $data['kc_handle'] = filled($data['kc_handle'] ?? null) ? ltrim(trim($data['kc_handle']), '@') : null;
 
         if ($data['will_attend_ippc'] && $data['will_be_at_exhibition']) {
             $data['delivery_method'] = null;

@@ -16,6 +16,7 @@ export interface PartnerCard {
     full_name: string;
     email: string | null;
     phone: string | null;
+    kc_handle: string | null;
     designation: string | null;
     region: string | null;
     zone: string | null;

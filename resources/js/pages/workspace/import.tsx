@@ -15,6 +15,7 @@ const COLUMNS = [
     ['full_name', 'Required'],
     ['email', 'Required · existing emails are skipped'],
     ['phone', 'Optional'],
+    ['kc_handle', 'Optional · KingsChat username'],
     ['region / zone / group / church', 'Optional'],
     ['tier', 'Ruby, Silver, Gold, Diamond, As One Man, Top Individual'],
     ['copies_sponsored', 'Number of ROR copies'],

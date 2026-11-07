@@ -20,6 +20,7 @@ interface Props {
         full_name: string;
         email: string | null;
         phone: string | null;
+        kc_handle: string | null;
         region: string | null;
         zone: string | null;
         group: string | null;
@@ -72,7 +73,7 @@ export default function Register({ token, partner, options }: Props) {
         designation: partner.designation ?? '',
         full_name: partner.full_name === 'Guest' ? '' : (partner.full_name ?? ''),
         phone: initialPhone.number,
-        kc_handle: '',
+        kc_handle: partner.kc_handle ?? '',
         region: partner.region ?? '',
         zone: partner.zone ?? '',
         group: partner.group ?? '',

@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { router } from '@inertiajs/react';
 import {
     AlertTriangleIcon,
+    AtSignIcon,
     BadgeCheckIcon,
     CheckIcon,
     CopyIcon,
@@ -200,6 +201,9 @@ export function PartnerPanel({
                                     </Row>
                                     <Row icon={<PhoneIcon />} label="Phone">
                                         {partner.phone ?? '—'}
+                                    </Row>
+                                    <Row icon={<AtSignIcon />} label="KingsChat">
+                                        {partner.kc_handle ? `@${partner.kc_handle}` : '—'}
                                     </Row>
                                     <Row icon={<PlaneIcon />} label="IPPC 2025">
                                         {partner.will_attend_ippc ? 'Attending' : 'Not attending'}

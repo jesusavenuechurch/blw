@@ -30,6 +30,7 @@ export function PartnerForm({
         full_name: partner?.full_name ?? '',
         email: partner?.email ?? '',
         phone: partner?.phone ?? '',
+        kc_handle: partner?.kc_handle ?? '',
         region: partner?.region ?? '',
         zone: partner?.zone ?? '',
         group: partner?.group ?? '',
@@ -89,6 +90,9 @@ export function PartnerForm({
                         </Field>
                         <Field label="Phone" error={errors.phone}>
                             <Input type="tel" value={data.phone} onChange={(e) => setData('phone', e.target.value)} />
+                        </Field>
+                        <Field label="KingsChat handle" error={errors.kc_handle} className="sm:col-span-2">
+                            <Input value={data.kc_handle} onChange={(e) => setData('kc_handle', e.target.value)} placeholder="username" />
                         </Field>
                     </div>
                 </Group>

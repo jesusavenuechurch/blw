@@ -22,6 +22,7 @@ class Partner extends Model
         'full_name',
         'email',
         'phone',
+        'kc_handle',
         'region',
         'zone',
         'group',

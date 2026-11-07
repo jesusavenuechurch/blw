@@ -31,6 +31,7 @@ class PartnersImport implements ToCollection, WithHeadingRow
                 'full_name' => $row['full_name'],
                 'email' => $row['email'],
                 'phone' => $row['phone'] ?? null,
+                'kc_handle' => isset($row['kc_handle']) ? ltrim(trim((string) $row['kc_handle']), '@') : null,
                 'region' => $row['region'] ?? null,
                 'zone' => $row['zone'] ?? null,
                 'group' => $row['group'] ?? null,

@@ -23,6 +23,7 @@ class SearchController extends Controller
             Partner::where(fn ($w) => $w->where('full_name', 'like', $like)
                 ->orWhere('email', 'like', $like)
                 ->orWhere('phone', 'like', $like)
+                ->orWhere('kc_handle', 'like', $like)
                 ->orWhere('church', 'like', $like))
                 ->orderBy('full_name')
                 ->limit(8)

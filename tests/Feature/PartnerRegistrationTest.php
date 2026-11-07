@@ -23,6 +23,7 @@ class PartnerRegistrationTest extends TestCase
             'designation' => 'Church Pastor',
             'full_name' => 'Ada Obi',
             'phone' => '+2348031234567',
+            'kc_handle' => '@adaobi',
             'will_attend_ippc' => true,
             'will_be_at_exhibition' => true,
             'coming_with_spouse' => true,
@@ -57,6 +58,7 @@ class PartnerRegistrationTest extends TestCase
         $partner->refresh();
         $this->assertTrue($partner->is_registered);
         $this->assertSame('Reverend', $partner->title);
+        $this->assertSame('adaobi', $partner->kc_handle);
         $this->assertNull($partner->delivery_method);
 
         $this->get('/partner/success')->assertInertia(fn (Assert $page) => $page
@@ -89,6 +91,14 @@ class PartnerRegistrationTest extends TestCase
 
         $this->post("/partner/register/{$partner->registration_token}", $this->form(['spouse_name' => '']))
             ->assertSessionHasErrors('spouse_name');
+    }
+
+    public function test_kingschat_handle_is_required(): void
+    {
+        $partner = $this->invited();
+
+        $this->post("/partner/register/{$partner->registration_token}", $this->form(['kc_handle' => '']))
+            ->assertSessionHasErrors('kc_handle');
     }
 
     public function test_qr_verification_page(): void

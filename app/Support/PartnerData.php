@@ -19,6 +19,7 @@ class PartnerData
             'full_name' => $p->full_name,
             'email' => $p->email,
             'phone' => $p->phone,
+            'kc_handle' => $p->kc_handle,
             'designation' => $p->designation,
             'region' => $p->region,
             'zone' => $p->zone,

@@ -180,3 +180,8 @@
 @utility animate-rise {
     animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
+
+@keyframes grow {
+    from { width: 0; }
+    to { width: 100%; }
+}
